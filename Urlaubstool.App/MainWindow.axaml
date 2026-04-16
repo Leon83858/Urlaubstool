@@ -25,6 +25,7 @@
                 <MenuItem Header="Beenden" Click="Exit_Click" />
             </MenuItem>
             <MenuItem Header="Einstellungen" Click="Settings_Click" />
+            <MenuItem Header="Info" Click="Info_Click" />
         </Menu>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -51,7 +52,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="Beantragt" FontSize="12" Classes="muted" />
+                        <TextBlock Text="Aktuelle Auswahl" FontSize="12" Classes="muted" />
                         <TextBlock x:Name="RequestedDaysTextBlock" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Brush.Accent}" />
                     </StackPanel>
 
@@ -73,7 +74,7 @@
                     <TextBlock Text="Zeitraum" FontWeight="Bold" FontSize="16" />
                     
                     <!-- Date range buttons -->
-                    <Grid ColumnDefinitions="1*,Auto,1*" RowDefinitions="Auto,Auto">
+                        <Grid ColumnDefinitions="1*,Auto,1*" RowDefinitions="Auto,Auto,Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Anreise:" VerticalAlignment="Center" FontSize="13" />
                         <Button Grid.Row="0" Grid.Column="0" x:Name="StartDateButton" 
                                 Content="Datum auswählen..."
@@ -81,7 +82,8 @@
                                 HorizontalAlignment="Stretch"
                                 FontWeight="Bold"
                                 Background="{DynamicResource Brush.Control}" 
-                                Margin="0,0,8,0" />
+                            Margin="0,0,8,0"
+                            ToolTip.Tip="{x:Null}" />
                         
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="Abreise:" VerticalAlignment="Center" FontSize="13" Margin="8,0,0,0" />
                         <Button Grid.Row="0" Grid.Column="2" x:Name="EndDateButton" 
@@ -90,28 +92,29 @@
                                 HorizontalAlignment="Stretch"
                                 FontWeight="Bold"
                                 Background="{DynamicResource Brush.Control}"
-                                Margin="8,0,0,0" />
+                            Margin="8,0,0,0"
+                            ToolTip.Tip="{x:Null}" />
+
+                        <!-- Half Day Selection directly under each date -->
+                        <CheckBox Grid.Row="1" Grid.Column="0" x:Name="StartHalfDayCheckBox" 
+                              Content="Halber Tag (Anreise)" 
+                              FontSize="13"
+                              Margin="0,6,8,0" />
+                        <CheckBox Grid.Row="1" Grid.Column="2" x:Name="EndHalfDayCheckBox" 
+                              Content="Halber Tag (Abreise)" 
+                              FontSize="13"
+                              Margin="8,6,0,0" />
 
                         <!-- Validation Errors -->
-                        <TextBlock Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource Brush.Danger}" FontSize="11" 
+                        <TextBlock Grid.Row="2" Grid.Column="0" Foreground="{DynamicResource Brush.Danger}" FontSize="11" 
                                    Text="{Binding StartDateError}"
                                    IsVisible="{Binding StartDateError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
                                    Margin="0,2,8,0" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Foreground="{DynamicResource Brush.Danger}" FontSize="11" 
+                        <TextBlock Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource Brush.Danger}" FontSize="11" 
                                    Text="{Binding EndDateError}"
                                    IsVisible="{Binding EndDateError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                    Margin="8,2,0,0" />
                     </Grid>
-
-                    <!-- Half Day Selection -->
-                    <StackPanel Spacing="8" Margin="0,8,0,0">
-                        <CheckBox x:Name="StartHalfDayCheckBox" 
-                                  Content="Halber Tag (Anreise)" 
-                                  FontSize="13" />
-                        <CheckBox x:Name="EndHalfDayCheckBox" 
-                                  Content="Halber Tag (Abreise)" 
-                                  FontSize="13" />
-                    </StackPanel>
 
                     <!-- AZA-Tage Section -->
                     <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" 
@@ -123,8 +126,7 @@
                                 <TextBlock Text="Wähle die AZA-Tage aus - für diese Tage werden keine Urlaubstage abgezogen:" 
                                            FontSize="12" Classes="muted" TextWrapping="Wrap" />
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <DatePicker x:Name="AzaNewDatePicker" HorizontalAlignment="Left" MinWidth="180" />
-                                    <Button x:Name="AddAzaDateButton" Content="+ Hinzufügen" Width="140" Click="AddAzaDate_Click" />
+                                    <Button x:Name="AddAzaDateButton" Content="+ AZA-Tag im Kalender auswählen" Width="260" Click="AddAzaDate_Click" />
                                 </StackPanel>
 
                                 <!-- Chips / tags for existing AZA dates -->

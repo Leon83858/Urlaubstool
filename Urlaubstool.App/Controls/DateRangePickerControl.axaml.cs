@@ -24,6 +24,8 @@ public partial class DateRangePickerControl : UserControl
     private bool _studentActive = false;
     private IReadOnlyDictionary<DayOfWeek, Domain.VocationalSchoolDayType> _vocationalSchoolDays = new Dictionary<DayOfWeek, Domain.VocationalSchoolDayType>();
     private HashSet<DateOnly> _approvedVacationDates = new();
+    private bool _singleDateSelectionMode;
+    private Urlaubstool.Infrastructure.Settings.ColorSettings _colorSettings = Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
 
     public event EventHandler<DateRangeSelectedEventArgs>? DateRangeSelected;
 
@@ -104,6 +106,27 @@ public partial class DateRangePickerControl : UserControl
         set
         {
             _approvedVacationDates = value?.ToHashSet() ?? new HashSet<DateOnly>();
+            RenderCalendar();
+        }
+    }
+
+    public bool SingleDateSelectionMode
+    {
+        get => _singleDateSelectionMode;
+        set
+        {
+            _singleDateSelectionMode = value;
+            RenderCalendar();
+            UpdateSelectedRangeLabel();
+        }
+    }
+
+    public Urlaubstool.Infrastructure.Settings.ColorSettings ColorSettings
+    {
+        get => _colorSettings;
+        set
+        {
+            _colorSettings = value ?? Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
             RenderCalendar();
         }
     }
@@ -208,6 +231,31 @@ public partial class DateRangePickerControl : UserControl
         }
 
         UpdateMonthLabel();
+        UpdateLegendColors();
+    }
+
+    private void UpdateLegendColors()
+    {
+        var legendSchultagGanztag = this.FindControl<Border>("LegendSchultagGanztag");
+        var legendWochenende = this.FindControl<Border>("LegendWochenende");
+        var legendHalbtag = this.FindControl<Border>("LegendHalbtag");
+        var legendGenehmigterUrlaub = this.FindControl<Border>("LegendGenehmigterUrlaub");
+        var legendNormaltag = this.FindControl<Border>("LegendNormaltag");
+
+        if (legendSchultagGanztag != null)
+            legendSchultagGanztag.Background = new SolidColorBrush(Color.Parse(_colorSettings.SchultagGanztag));
+
+        if (legendWochenende != null)
+            legendWochenende.Background = new SolidColorBrush(Color.Parse(_colorSettings.Wochenende));
+
+        if (legendHalbtag != null)
+            legendHalbtag.Background = new SolidColorBrush(Color.Parse(_colorSettings.SchultagHalbtag));
+
+        if (legendGenehmigterUrlaub != null)
+            legendGenehmigterUrlaub.Background = new SolidColorBrush(Color.Parse(_colorSettings.GenehmigterUrlaub));
+
+        if (legendNormaltag != null)
+            legendNormaltag.Background = new SolidColorBrush(Color.Parse(_colorSettings.Normaltag));
     }
 
     private void UpdateDayButtonStyle(Button button, DateOnly dateOnly)
@@ -294,7 +342,7 @@ public partial class DateRangePickerControl : UserControl
             if (dayType == DayType.SchoolHoliday)
             {
                 Console.WriteLine($"[DEBUG] Applying SchoolHoliday style for {dateOnly}");
-                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#FFCDD2"));
+                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(_colorSettings.SchultagGanztag));
                 button.Foreground = specialForeground;
                 button.BorderBrush = specialBorderBrush;
                 button.BorderThickness = new Avalonia.Thickness(1);
@@ -302,14 +350,14 @@ public partial class DateRangePickerControl : UserControl
             else if (dayType == DayType.PublicHolidayOrWeekend)
             {
                 Console.WriteLine($"[DEBUG] Applying PublicHolidayOrWeekend style for {dateOnly}");
-                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#C8E6C9"));
+                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(_colorSettings.Wochenende));
                 button.Foreground = specialForeground;
                 button.BorderBrush = specialBorderBrush;
                 button.BorderThickness = new Avalonia.Thickness(1);
             }
             else if (dayType == DayType.HalfDayOnly)
             {
-                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#FFE0B2"));
+                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(_colorSettings.SchultagHalbtag));
                 button.Foreground = specialForeground;
                 button.BorderBrush = specialBorderBrush;
                 button.BorderThickness = new Avalonia.Thickness(1);
@@ -317,7 +365,7 @@ public partial class DateRangePickerControl : UserControl
             else if (dayType == DayType.ApprovedVacation)
             {
                 // Gaming-style loot purple for already approved vacation days.
-                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#E1BEE7"));
+                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(_colorSettings.GenehmigterUrlaub));
                 button.Foreground = specialForeground;
                 button.BorderBrush = specialBorderBrush;
                 button.BorderThickness = new Avalonia.Thickness(1);
@@ -325,7 +373,7 @@ public partial class DateRangePickerControl : UserControl
             else
             {
                 // Normal day
-                button.Background = defaultBackground;
+                button.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(_colorSettings.Normaltag));
                 button.Foreground = defaultForeground;
                 button.BorderBrush = defaultBorder;
                 button.BorderThickness = new Avalonia.Thickness(1);
@@ -397,6 +445,17 @@ public partial class DateRangePickerControl : UserControl
 
     private void DayButton_Click(DateOnly dateOnly)
     {
+        if (_singleDateSelectionMode)
+        {
+            _selectedStartDate = dateOnly;
+            _selectedEndDate = dateOnly;
+            _awaitingEndDate = false;
+            DateRangeSelected?.Invoke(this, new DateRangeSelectedEventArgs(_selectedStartDate.Value, _selectedEndDate.Value));
+            RenderCalendar();
+            UpdateSelectedRangeLabel();
+            return;
+        }
+
         if (!_selectedStartDate.HasValue)
         {
             // First selection: set start date

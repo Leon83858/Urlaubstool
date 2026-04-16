@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-OUTPUT_PATH="/Users/leonpilger/Documents/Apps/ultimate urlaubstool/v1.2.0"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+OUTPUT_PATH="$SCRIPT_DIR/../v1.2.0"
 mkdir -p "$OUTPUT_PATH"
 
 echo "🔨 Kompiliere Urlaubstool v1.2.0..."
@@ -63,7 +64,7 @@ printf '<?xml version="1.0" encoding="UTF-8"?>
     <key>CFBundleDisplayName</key>
     <string>Urlaubstool</string>
     <key>CFBundleIdentifier</key>
-    <string>com.leonpilger.urlaubstool</string>
+    <string>com.urlaubstool.app</string>
     <key>CFBundleVersion</key>
     <string>1.2.0</string>
     <key>CFBundleShortVersionString</key>

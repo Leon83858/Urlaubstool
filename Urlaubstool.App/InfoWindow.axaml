@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Urlaubstool.App.InfoWindow"
+        Title="Infos"
+        Width="920"
+        Height="700"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Border Padding="16" Background="{DynamicResource Brush.Surface}">
+        <TabControl x:Name="InfoTabControl">
+            <TabItem Header="Patch Notes 1.3.0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="10" Margin="8">
+                        <TextBlock Text="Patch Notes - Version 1.3.0" FontSize="24" FontWeight="Bold" />
+                        <TextBlock Text="Diese Version bringt eine komplette Überarbeitung der Urlaubszeitraum-Auswahl, deutlich bessere Transparenz bei Regeln und eine robustere Export-Ablage unter Windows." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Neue Funktionen" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Neuer Kalender-Popup für die Auswahl von Start- und Enddatum." TextWrapping="Wrap" />
+                        <TextBlock Text="- Ein-Tages-Urlaub direkt auswählbar (Start- und Enddatum identisch)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Farbmarkierungen im Kalender für Arbeitstage, Feiertage/Wochenenden, halbe Berufsschultage und bereits genehmigte Urlaubstage." TextWrapping="Wrap" />
+                        <TextBlock Text="- Neue Legende im Kalenderfenster zur sofortigen Erklärung der Farben." TextWrapping="Wrap" />
+                        <TextBlock Text="- Neue Übersicht im Auswahlfenster mit echter Urlaubstage-Berechnung (inkl. 0,5-Tage-Regeln)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Farben fuer die Kalenderkategorien sind jetzt in den Einstellungen per HEX-Code frei konfigurierbar." TextWrapping="Wrap" />
+                        <TextBlock Text="- Jede Farbe in den Einstellungen hat eine Live-Vorschau und einen eigenen Reset-Button auf den Standardwert." TextWrapping="Wrap" />
+                        <TextBlock Text="- Farbänderungen werden nach dem Schließen der Einstellungen direkt in Tageauswahl und Legende übernommen." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Regel- und Validierungsverbesserungen" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Schultage in Ferien werden als normale Arbeitstage behandelt (kein Rot/Orange)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Rote ganztägige Berufsschultage erzeugen klare Fehlermeldungen im Datumsfenster und im Hauptfenster." TextWrapping="Wrap" />
+                        <TextBlock Text="- Identische Fehlermeldungstexte im Date-Picker und in der Hauptansicht für konsistentes Verhalten." TextWrapping="Wrap" />
+                        <TextBlock Text="- Betroffene Termine werden in Fehlermeldungen explizit aufgelistet." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Berechnung und Anzeige" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Grüne Tage (Feiertag/Wochenende) werden nicht als Urlaubstage gezählt." TextWrapping="Wrap" />
+                        <TextBlock Text="- Orange Tage zählen als 0,5 Urlaubstag." TextWrapping="Wrap" />
+                        <TextBlock Text="- Übersicht zeigt die tatsächlich genommenen Urlaubstage für den ausgewählten Zeitraum." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Historie und Visualisierung" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Bereits genehmigte Urlaubstage werden im Kalender jetzt in einem kräftigen Lila markiert." TextWrapping="Wrap" />
+                        <TextBlock Text="- Die Markierung basiert auf den genehmigten Historien-Einträgen des Jahres." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Plattform und Speicherorte" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Windows: PDF-Exporte werden standardmäßig im Dokumente-Ordner abgelegt (Urlaubstool/Exports)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Interne App-Daten (Settings/History) bleiben weiterhin in AppData/Roaming." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Hinweis" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Diese Patch Notes werden beim ersten Start von Version 1.3.0 automatisch geöffnet." TextWrapping="Wrap" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Anleitung &amp; Beschreibung">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="10" Margin="8">
+                        <TextBlock Text="App Beschreibung" FontSize="24" FontWeight="Bold" />
+                        <TextBlock Text="Urlaubstool ist eine Desktop-App zur strukturierten Planung und Dokumentation von Urlaubsanträgen. Die App berechnet automatisch den tatsächlichen Urlaubsverbrauch und berücksichtigt dabei Wochenenden, Feiertage, AZA-Tage sowie optionale Schüler-/Berufsschulregeln." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Schnellstart" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="1. Einstellungen öffnen und persönliche Daten, Jahresurlaub und Arbeitswoche prüfen." TextWrapping="Wrap" />
+                        <TextBlock Text="2. Zeitraum über den Kalender wählen (Anreise/Abreise)." TextWrapping="Wrap" />
+                        <TextBlock Text="3. Optional Halbtage und AZA-Tage setzen." TextWrapping="Wrap" />
+                        <TextBlock Text="4. Aufschlüsselung prüfen und bei Bedarf korrigieren." TextWrapping="Wrap" />
+                        <TextBlock Text="5. PDF exportieren und den Eintrag in der Historie weiter bearbeiten (genehmigen/ablehnen/archivieren)." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Kalenderfarben" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Gruen: Wochenende oder Feiertag (zaehlt nicht als Urlaubstag)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Orange: Halber Berufsschultag (zaehlt als 0,5)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Rot: Ganzer Berufsschultag (Urlaub an diesem Tag nicht moeglich)." TextWrapping="Wrap" />
+                        <TextBlock Text="- Lila: Bereits genehmigter Urlaubstag." TextWrapping="Wrap" />
+                        <TextBlock Text="- Dunkelblau: Normaler Arbeitstag." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Wichtige Regeln" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- Schultage innerhalb offizieller Ferien werden als normale Arbeitstage behandelt." TextWrapping="Wrap" />
+                        <TextBlock Text="- Rote Tage erzeugen Fehlermeldungen mit betroffenen Terminen." TextWrapping="Wrap" />
+                        <TextBlock Text="- Nur die wirklich genommenen Tage werden gezaehlt (inkl. 0,5-Regeln)." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Historie" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- In der Historie lassen sich Eintraege nach Jahr/Status filtern und sortieren." TextWrapping="Wrap" />
+                        <TextBlock Text="- Aktionen pro Eintrag: PDF oeffnen, genehmigen, ablehnen (mit Grund), archivieren oder loeschen." TextWrapping="Wrap" />
+
+                        <TextBlock Text="Export" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock Text="- PDF-Export verwendet Vorlagenfelder und prueft Pflichtangaben vor dem Erstellen." TextWrapping="Wrap" />
+                        <TextBlock Text="- Bei Exportfehlern zeigt die App eine klare Diagnose und Handlungsoptionen." TextWrapping="Wrap" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Border>
+</Window>

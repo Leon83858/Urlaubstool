@@ -27,7 +27,16 @@ public partial class DateRangePickerDialog : Window
         }
     }
 
-    public DateRangePickerDialog(DateOnly? startDate, DateOnly? endDate, IPublicHolidayProvider? publicHolidayProvider, ISchoolHolidayProvider? schoolHolidayProvider, string state = "DE-BY", bool studentActive = false, IReadOnlyDictionary<DayOfWeek, Urlaubstool.Domain.VocationalSchoolDayType>? vocationalSchoolDays = null, IReadOnlyCollection<DateOnly>? approvedVacationDates = null) : this()
+    public DateRangePickerDialog(
+        DateOnly? startDate,
+        DateOnly? endDate,
+        IPublicHolidayProvider? publicHolidayProvider,
+        ISchoolHolidayProvider? schoolHolidayProvider,
+        string state,
+        bool studentActive,
+        IReadOnlyDictionary<DayOfWeek, Urlaubstool.Domain.VocationalSchoolDayType> vocationalSchoolDays,
+        IReadOnlyCollection<DateOnly>? approvedVacationDates = null,
+        Urlaubstool.Infrastructure.Settings.ColorSettings? colorSettings = null) : this()
     {
         var picker = this.FindControl<DateRangePickerControl>("DateRangePicker")!;
         
@@ -43,6 +52,7 @@ public partial class DateRangePickerDialog : Window
         picker.StudentActive = studentActive;
         picker.VocationalSchoolDays = vocationalSchoolDays ?? new Dictionary<DayOfWeek, Urlaubstool.Domain.VocationalSchoolDayType>();
         picker.ApprovedVacationDates = approvedVacationDates ?? Array.Empty<DateOnly>();
+        picker.ColorSettings = colorSettings ?? Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
     }
 
     private void Cancel_Click(object? sender, RoutedEventArgs e)
@@ -71,7 +81,8 @@ public partial class DateRangePickerDialog : Window
         SelectedStartDate = picker.SelectedStartDate;
         SelectedEndDate = picker.SelectedEndDate;
         
-        Close((SelectedStartDate, SelectedEndDate));
+        // Cast to (DateOnly, DateOnly)? for proper Avalonia type compatibility
+        Close(((DateOnly, DateOnly)?)(SelectedStartDate.Value, SelectedEndDate.Value));
     }
 
     private async System.Threading.Tasks.Task ShowMessageBox(string title, string message)

@@ -1,5 +1,6 @@
 #!/bin/bash
-cd "/Users/leonpilger/Documents/Apps/ultimate urlaubstool/src"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 
 # Kill any running instances
 killall -9 Urlaubstool.App 2>/dev/null

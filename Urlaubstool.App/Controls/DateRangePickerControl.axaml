@@ -63,22 +63,27 @@
                 <TextBlock Text="Legende:" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Muted}" />
                 
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Border Width="16" Height="16" CornerRadius="2" Background="#C8E6C9" BorderBrush="#66BB6A" BorderThickness="1" />
+                    <Border x:Name="LegendSchultagGanztag" Width="16" Height="16" CornerRadius="2" Background="#FFCDD2" BorderBrush="#E57373" BorderThickness="1" />
+                    <TextBlock Text="Ganztägiger Schultag" FontSize="10" VerticalAlignment="Center" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border x:Name="LegendWochenende" Width="16" Height="16" CornerRadius="2" Background="#C8E6C9" BorderBrush="#66BB6A" BorderThickness="1" />
                     <TextBlock Text="Wochenende / Feiertag" FontSize="10" VerticalAlignment="Center" />
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Border Width="16" Height="16" CornerRadius="2" Background="#FFE0B2" BorderBrush="#FF9800" BorderThickness="1" />
+                    <Border x:Name="LegendHalbtag" Width="16" Height="16" CornerRadius="2" Background="#FFE0B2" BorderBrush="#FF9800" BorderThickness="1" />
                     <TextBlock Text="Halbtag Berufsschule (max. 0.5 Tage Urlaub)" FontSize="10" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Border Width="16" Height="16" CornerRadius="2" Background="#E1BEE7" BorderBrush="#8E24AA" BorderThickness="1" />
+                    <Border x:Name="LegendGenehmigterUrlaub" Width="16" Height="16" CornerRadius="2" Background="#E1BEE7" BorderBrush="#8E24AA" BorderThickness="1" />
                     <TextBlock Text="Bereits genehmigter Urlaub" FontSize="10" VerticalAlignment="Center" />
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Border Width="16" Height="16" CornerRadius="2" Background="#0E1A2D" BorderBrush="#20324F" BorderThickness="1" />
+                    <Border x:Name="LegendNormaltag" Width="16" Height="16" CornerRadius="2" Background="#0E1A2D" BorderBrush="#20324F" BorderThickness="1" />
                     <TextBlock Text="Normaler Arbeitstag" FontSize="10" VerticalAlignment="Center" />
                 </StackPanel>
             </StackPanel>

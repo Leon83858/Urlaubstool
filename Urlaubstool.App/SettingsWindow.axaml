@@ -155,6 +155,83 @@
                 </StackPanel>
             </Border>
 
+            <!-- Color Settings -->
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Farb-Einstellungen (HEX-Codes)" FontWeight="Bold" FontSize="16" />
+                    
+                    <!-- Row 1: Ganztägiger Schultag -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Ganztägiger Schultag:" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" x:Name="ColorSchultagGanztag" Watermark="z.B. #FFCDD2" Margin="0,0,8,0" TextChanged="OnColorTextChanged" />
+                        <Border Grid.Column="2" x:Name="ColorSchultagGanztagPreview" Margin="0,0,8,0" CornerRadius="3" BorderBrush="#88888888" BorderThickness="1" />
+                        <Button Grid.Column="3" Content="Reset" Click="ResetColorSchultagGanztag_Click" />
+                    </Grid>
+
+                    <!-- Row 2: Wochenende/Feiertag -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Wochenende/Feiertag:" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" x:Name="ColorWochenende" Watermark="z.B. #C8E6C9" Margin="0,0,8,0" TextChanged="OnColorTextChanged" />
+                        <Border Grid.Column="2" x:Name="ColorWochenendePreview" Margin="0,0,8,0" CornerRadius="3" BorderBrush="#88888888" BorderThickness="1" />
+                        <Button Grid.Column="3" Content="Reset" Click="ResetColorWochenende_Click" />
+                    </Grid>
+
+                    <!-- Row 3: Halbtägiger Schultag -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Halbtägiger Schultag:" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" x:Name="ColorSchultagHalbtag" Watermark="z.B. #FFE0B2" Margin="0,0,8,0" TextChanged="OnColorTextChanged" />
+                        <Border Grid.Column="2" x:Name="ColorSchultagHalbtag_Preview" Margin="0,0,8,0" CornerRadius="3" BorderBrush="#88888888" BorderThickness="1" />
+                        <Button Grid.Column="3" Content="Reset" Click="ResetColorSchultagHalbtag_Click" />
+                    </Grid>
+
+                    <!-- Row 4: Genehmigter Urlaub -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Genehmigter Urlaub:" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" x:Name="ColorGenehmigterUrlaub" Watermark="z.B. #E1BEE7" Margin="0,0,8,0" TextChanged="OnColorTextChanged" />
+                        <Border Grid.Column="2" x:Name="ColorGenehmigterUrlaubPreview" Margin="0,0,8,0" CornerRadius="3" BorderBrush="#88888888" BorderThickness="1" />
+                        <Button Grid.Column="3" Content="Reset" Click="ResetColorGenehmigterUrlaub_Click" />
+                    </Grid>
+
+                    <!-- Row 5: Normaltag -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Normaltag:" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" x:Name="ColorNormaltag" Watermark="z.B. #0E1A2D" Margin="0,0,8,0" TextChanged="OnColorTextChanged" />
+                        <Border Grid.Column="2" x:Name="ColorNormaltagPreview" Margin="0,0,8,0" CornerRadius="3" BorderBrush="#88888888" BorderThickness="1" />
+                        <Button Grid.Column="3" Content="Reset" Click="ResetColorNormaltag_Click" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- Validation Error -->
             <TextBlock x:Name="ValidationErrorTextBlock" 
                        Foreground="Red" 

@@ -1,200 +1,190 @@
 # Urlaubstool
 
-Cross-platform Avalonia desktop app for Urlaubsschein creation, calculation, PDF export, and history management. Uses the same UI engine as RawImporter (Avalonia 11.1.3 with Fluent theme and custom color resources).
+Plattformuebergreifende Avalonia-Desktop-App zur Erstellung von Urlaubsantraegen, Berechnung von Urlaubstagen, PDF-Export und Historienverwaltung. Die App verwendet dieselbe UI-Technologie wie RawImporter (Avalonia mit Fluent-Theme und eigenen Farbressourcen).
 
-## Engine Evidence
-- RawImporter uses Avalonia: see [Raw Importer/C# Mac/RawImporterCS.csproj](Raw%20Importer/C%23%20Mac/RawImporterCS.csproj) with `PackageReference Include="Avalonia" Version="11.1.3"` and XAML views [Raw Importer/C# Mac/App.axaml](Raw%20Importer/C%23%20Mac/App.axaml).
-- Urlaubstool mirrors this: Avalonia 11.1.3, Fluent theme, and matching color resources in [Urlaubstool.App/Colors.axaml](Urlaubstool.App/Colors.axaml).
+## Technische Grundlage
+- RawImporter verwendet Avalonia (siehe Projektdatei und XAML-Ansichten).
+- Urlaubstool nutzt denselben Ansatz mit Fluent-Theme und zentralen Farbressourcen in Urlaubstool.App/Colors.axaml.
 
-## Template Fields
-PDF template (`basis/Template.pdf`) contains two identical sections (Original + Kopie) with these fields:
-- Personal: Name, Vorname, Adresse (Straße/PLZ), Abteilung, Personalnummer
-- Request dates: Start Datum, Enddatum
-- Vacation calculations: Gesammt verfügbarer Urlaub, Bereits erhaltener Urlaub, Mit diesem Antrag beantragt, Resturlaub, Anzahl Halbtage
-- AZA-Tage: Multiline section listing vocational school days during vacation period
-- Signature: Antragsdatum, Unterschrift placeholder
-- Administrative: Genehmigt, Bearbeitet, Personalabteilung, Ablehnungsgrund (left blank for initial submission)
+## Template-Felder
+Das PDF-Template in basis/Template.pdf enthaelt zwei identische Bereiche (Original und Kopie) mit folgenden Feldern:
+- Personendaten: Name, Vorname, Adresse (Strasse/PLZ), Abteilung, Personalnummer
+- Antragszeitraum: Startdatum, Enddatum
+- Urlaubsberechnung: Gesamturlaub, bereits erhaltener Urlaub, mit diesem Antrag beantragt, Resturlaub, Anzahl Halbtage
+- AZA-Tage: Mehrzeiliger Bereich fuer Berufsschultage im Zeitraum
+- Unterschrift: Antragsdatum, Unterschriftsplatzhalter
+- Verwaltung: Genehmigt, Bearbeitet, Personalabteilung, Ablehnungsgrund
 
-## Projects
-- `Urlaubstool.App` – Avalonia UI (SetupWizard, MainView, History/Admin, Settings).
-- `Urlaubstool.Domain` – Pure calculation, validation, models, holiday interfaces.
-- `Urlaubstool.Infrastructure` – Persistence (settings JSON, ledger CSV), offline holiday providers, PDF export (iText7 stamping), paths service.
-- `Urlaubstool.Tests` – xUnit + FluentAssertions coverage.
+## Projekte
+- Urlaubstool.App: Avalonia-Oberflaeche (SetupWizard, Hauptfenster, Historie/Admin, Einstellungen)
+- Urlaubstool.Domain: Berechnungslogik, Validierung, Modelle, Feiertags-Interfaces
+- Urlaubstool.Infrastructure: Persistenz (Settings JSON, Ledger CSV), Offline-Feiertage, PDF-Export (iText7), Pfadservice
+- Urlaubstool.Tests: xUnit-Tests mit FluentAssertions
 
-## Build & Run
+## Build und Start
 ```bash
-cd "/Users/leonpilger/Documents/Apps/ultimate urlaubstool"
 dotnet restore
 dotnet build -c Release
 dotnet test -c Release
 dotnet run --project Urlaubstool.App
 ```
 
-## Settings & Ledger Paths
-- macOS: `~/Library/Application Support/Urlaubstool/settings.json` and `~/Library/Application Support/Urlaubstool/ledger.csv`
-- Windows: `%APPDATA%\Urlaubstool\settings.json` and `...\ledger.csv`
-- PDF exports: `~/Documents/Urlaubstool/Exports/` (versioned filenames `Urlaubsantrag_YYYY-MM-DD_bis_YYYY-MM-DD_vX.pdf`).
+## Pfade fuer Einstellungen und Ledger
+- macOS: ~/Library/Application Support/Urlaubstool/settings.json und ~/Library/Application Support/Urlaubstool/ledger.csv
+- Windows: %APPDATA%/Urlaubstool/settings.json und entsprechendes ledger.csv
+- PDF-Exporte: ~/Documents/Urlaubstool/Exports/ mit versionierten Dateinamen wie Urlaubsantrag_YYYY-MM-DD_bis_YYYY-MM-DD_vX.pdf
 
-## Holiday Data
-- Public holidays offline in code (fixed + Easter-based + state-specific + Buß- und Bettag for SN).
-- School holidays offline JSON embedded: [Urlaubstool.Infrastructure/Data/school_holidays.json](Urlaubstool.Infrastructure/Data/school_holidays.json), cross-year ranges split during load to cover January correctly.
-- Providers: `PublicHolidayProvider`, `SchoolHolidayProvider` (both used by `VacationCalculator`).
+## Feiertagsdaten
+- Gesetzliche Feiertage werden offline im Code berechnet (fixe Feiertage, Osterbezug, bundeslandspezifische Regeln inkl. Buss- und Bettag fuer SN).
+- Schulferien liegen als eingebettete JSON-Datei vor: Urlaubstool.Infrastructure/Data/school_holidays.json.
+- Verwendete Provider: PublicHolidayProvider und SchoolHolidayProvider (genutzt vom VacationCalculator).
 
-## Calculation Rules (implemented in Domain)
-- Non-workdays and public holidays count 0.
-- **AZA-Tage (Arbeitszeitausgleich/Überstundenabbau)**: User can mark specific dates as AZA days in the vacation request. These days count as 0 vacation days but are included in the period (for compensatory time off).
-- Student mode: school holidays override vocational rules; full school day = error, half = max 0.5.
-- Half-days only on start/end; otherwise hard error. Year crossing hard error. Remaining days insufficiency hard error.
-- Uses `DateOnly` and `decimal` only.
+## Berechnungsregeln (Domain)
+- Nicht-Arbeitstage und gesetzliche Feiertage zaehlen 0 Urlaubstage.
+- AZA-Tage (Arbeitszeitausgleich/Ueberstundenabbau) koennen im Zeitraum markiert werden und zaehlen ebenfalls 0 Urlaubstage.
+- Schuelermodus: Schulferien haben Vorrang vor Berufsschulregeln; ganzer Berufsschultag fuehrt zu Fehler, halber Tag zaehlt maximal 0,5.
+- Halbtage sind nur am Start- oder Endtag erlaubt, sonst Fehler.
+- Jahresuebergreifende Zeitraeume sind nicht erlaubt.
+- Unzureichender Resturlaub fuehrt zu einem harten Fehler.
+- Es werden ausschliesslich DateOnly und decimal verwendet.
 
-## Features
-- **AZA-Tage Selection**: Users can activate an AZA checkbox in the main window to add specific dates for compensatory time off (Arbeitszeitausgleich) within the vacation period. Each AZA day can be selected via DatePicker and will not deduct vacation days.
-- Cross-platform compatibility: Windows (win-x64, win-arm64), macOS (osx-arm64, osx-x64)
-- PDF export with AcroForm field filling (iText7)
-- Vacation ledger with history management
-- Settings persistence across platforms
+## Funktionen
+- AZA-Tage-Auswahl im Hauptfenster per Checkbox und Datumsauswahl
+- Plattformunterstuetzung: Windows (win-x64, win-arm64) und macOS (osx-arm64, osx-x64)
+- PDF-Export mit iText7
+- Historienverwaltung fuer Urlaubsantraege
+- Persistente Einstellungen ueber Plattformgrenzen hinweg
 
-## Persistence
-- Settings JSON with schema version, safe-write temp then replace.
-- Ledger CSV schema versioned, invariant decimal, retry on file lock.
+## Persistenz
+- Settings als JSON mit Schema-Version und sicherem Schreibvorgang (temporaere Datei, dann Replace)
+- Ledger als CSV mit versionsfaehigem Schema, invariantem Dezimalformat und Retry bei Dateisperren
 
-## PDF Export Architecture
-**NO Excel dependency** - Pure PDF stamping approach using iText7:
+## PDF-Export-Architektur
+Keine Excel-Abhaengigkeit, stattdessen reines PDF-Stempeln mit iText7.
 
 ### Template
-- Embedded resource: `Urlaubstool.Infrastructure/Pdf/Template.pdf` (basis/Template.pdf)
-- Single-page A4 template with two identical sections: Original (top) and Kopie (bottom)
+- Eingebettete Ressource: Urlaubstool.Infrastructure/Pdf/Template.pdf
+- A4-Einzelblatt mit zwei identischen Bereichen (Original oben, Kopie unten)
 
-### Stamping Service
-- `PdfTemplateStampExportService` loads embedded template and stamps text at precise coordinates
-- Uses `TemplateLayout.TemplatePdf_v1.cs` for field coordinate definitions (X/Y baseline positions)
-- All coordinates use PDF coordinate system (origin at bottom-left, Y = baseline for accurate line alignment)
-- Text is clipped to MaxWidth; font shrinks if needed, ellipsis added if still too wide
-- NO AcroForm fields required - pure coordinate-based rendering
+### Stempelservice
+- PdfTemplateStampExportService laedt das eingebettete Template und schreibt Inhalte an feste Koordinaten
+- Feldkoordinaten werden in TemplateLayout.TemplatePdf_v1.cs definiert
+- Koordinatensystem: PDF-Ursprung unten links, Y als Baseline
+- Texte werden auf MaxWidth begrenzt, bei Bedarf skaliert und mit Ellipse abgeschnitten
+- Keine AcroForm-Felder erforderlich
 
-### Field Layout
-- `TemplateLayout.Original` defines coordinates for top section
-- `TemplateLayout.Kopie` mirrors Original with vertical offset (-421pt)
-- Each field specifies: X, Y (baseline), MaxWidth, FontSize, TextAlignment (Left/Right/Center)
-- Multiline fields (AZA-Tage) support line wrapping with configurable LineHeight and MaxLines
+### Feldlayout
+- TemplateLayout.Original definiert die Koordinaten fuer den oberen Bereich
+- TemplateLayout.Kopie spiegelt den oberen Bereich mit vertikalem Offset
+- Felder definieren X, Y (Baseline), MaxWidth, FontSize und TextAlignment
+- Mehrzeilige Felder (AZA-Tage) unterstuetzen Zeilenumbruch, LineHeight und MaxLines
 
-### Placeholder Resolution
-- `PlaceholderResolver` converts AppSettings + VacationRequest + CalculationResult into `TemplateFieldValues`
-- German formatting: dates (dd.MM.yyyy), decimals (comma separator)
-- AZA-Tage builds multiline text listing vocational school days: "Mittwoch, 15.05.2025 - Ganztagsschule"
+### Platzhalter-Aufloesung
+- PlaceholderResolver wandelt AppSettings, VacationRequest und CalculationResult in TemplateFieldValues um
+- Deutsches Format fuer Datum (dd.MM.yyyy) und Dezimalzahlen (Komma)
+- AZA-Tage werden als mehrzeiliger Text ausgegeben
 
-### Export Process
-1. Validate required fields (Name, Vorname, Adresse, Abteilung)
-2. Resolve field values with German formatting
-3. Load embedded Template.pdf
-4. Stamp text onto both Original and Kopie sections using iText7 Canvas API
-5. Save versioned PDF: `Urlaubsantrag_2025-06-01_bis_2025-06-05_v1.pdf`
-6. Record in ledger
+### Export-Ablauf
+1. Pflichtfelder pruefen (Name, Vorname, Adresse, Abteilung)
+2. Platzhalterwerte mit deutschem Format erzeugen
+3. Eingebettetes Template laden
+4. Werte auf Original und Kopie stempeln
+5. Versionierte PDF speichern
+6. Eintrag im Ledger erfassen
 
-## Updating Template/Layout
-- Template: Replace `Urlaubstool.Infrastructure/Pdf/Template.pdf` and rebuild (embedded resource)
-- Coordinates: Edit `TemplateLayout.TemplatePdf_v1.cs` field positions to match new template layout
-- Fields: Add new fields to `TemplateFieldValues`, `PlaceholderResolver.ResolvePlaceholders()`, and stamping methods
+## Template oder Layout aktualisieren
+- Template austauschen: Urlaubstool.Infrastructure/Pdf/Template.pdf ersetzen und neu bauen
+- Koordinaten anpassen: TemplateLayout.TemplatePdf_v1.cs bearbeiten
+- Neue Felder einfuehren: TemplateFieldValues, PlaceholderResolver und Stamping-Logik erweitern
 
-## Tests Covered
-- VacationCalculator: weekend exclusion, public holiday exclusion, student full/half rules, school holidays override, half-day edges, cross-year error, remaining days insufficient, Buß- und Bettag known dates, cross-year school holiday lookup.
-- Persistence: settings and ledger roundtrips preserve decimals and selections.
+## Abgedeckte Tests
+- VacationCalculator: Wochenenden, Feiertage, Schuelerregeln (voll/halb), Schulferien-Prioritaet, Halbtag-Regeln, Jahresgrenze, Resturlaub, bekannte Feiertage
+- Persistenz: Roundtrip-Tests fuer Settings und Ledger inkl. Dezimalwerte und Auswahlen
 
-## Runtime Notes
-- UI text is German; comments remain English for maintainability.
-- App runs fully offline; no network dependencies.
-- PDF export requires NO external applications (LibreOffice/Excel/Numbers) - iText7 handles everything.
+## Laufzeit-Hinweise
+- UI-Texte sind Deutsch, Code-Kommentare teilweise Englisch aus Wartbarkeitsgruenden
+- App laeuft vollstaendig offline
+- PDF-Export benoetigt keine externen Programme
 
 ============================================================
-11) EXECUTION, DESK-CHECKS & STABILITY LOOPS (MANDATORY)
+11) AUSFUEHRUNG, DESK-CHECKS UND STABILITAETSSCHLEIFEN (PFLICHT)
 ============================================================
 
-11.1 Start the application
-- Run the app from source:
-  - `dotnet run --project Urlaubstool.App`
-- The app must open without crashing and must reach the main screen.
+11.1 Anwendung starten
+- App aus dem Quellcode starten:
+  - dotnet run --project Urlaubstool.App
+- Die App muss ohne Absturz bis ins Hauptfenster starten.
 
-11.2 If the app fails to start
-If startup fails (crash, exception, build error, missing resource, runtime error):
-- Identify the exact root cause using:
-  - build output
-  - runtime stack trace
-  - logs
-- Fix the issue permanently in code/config/resources (no hacks, no "ignore errors").
-- Then run again:
-  - `dotnet build -c Release`
-  - `dotnet test -c Release`
-  - `dotnet run --project Urlaubstool.App`
-Repeat until the app starts successfully.
+11.2 Wenn die App nicht startet
+Bei Startfehlern (Absturz, Exception, Build-Fehler, fehlende Ressource, Laufzeitfehler):
+- Exakte Ursache ermitteln ueber Build-Ausgabe, Stacktrace und Logs.
+- Ursache dauerhaft in Code, Konfiguration oder Ressourcen beheben.
+- Danach erneut ausfuehren:
+  - dotnet build -c Release
+  - dotnet test -c Release
+  - dotnet run --project Urlaubstool.App
+- Wiederholen, bis der Start stabil funktioniert.
 
-11.3 Desk-checks and simulations (minimum 5 clean runs each)
-After the app starts, perform a thorough "Schreibtischtest" and simulation runs. You must execute each of the following scenarios end-to-end and ensure they complete with:
-- no crashes
-- no unhandled exceptions
-- no validation warnings that indicate incorrect logic
-- no incorrect calculations
-- no broken UI states (buttons enabled incorrectly, empty lists, wrong totals, etc.)
+11.3 Desk-Checks und Simulationen (mindestens 5 saubere Durchlaeufe je Szenario)
+Nach erfolgreichem Start sind alle Szenarien Ende-zu-Ende zu testen. Erforderlich sind pro Lauf:
+- keine Abstuerze
+- keine unbehandelten Exceptions
+- keine Warnungen aufgrund fehlerhafter Logik
+- keine falschen Berechnungen
+- keine fehlerhaften UI-Zustaende
 
-Run EACH scenario at least 5 times without errors or warnings (5 consecutive clean passes per scenario).
-If any run fails, fix the issue and restart the count for that scenario.
+Jedes Szenario muss mindestens 5-mal in Folge fehlerfrei laufen. Bei einem Fehler beginnt der Zaehler fuer dieses Szenario erneut.
 
-Scenario A — Basic employee mode (no student parameters)
-1) Disable Schülerparameter
-2) Configure Workdays = Mo–Fr, Entitlement = 30
-3) Create a request for a normal Mon–Fri week (no holidays)
-4) Verify total days = 5
-5) Export PDF succeeds
-6) Entry appears in history correctly
-Repeat until 5 consecutive clean passes.
+Szenario A - Basis-Modus ohne Schuelerparameter
+1. Schuelerparameter deaktivieren.
+2. Arbeitstage Mo-Fr, Anspruch 30 Tage setzen.
+3. Normale Woche ohne Feiertage beantragen.
+4. Summe 5 Tage pruefen.
+5. PDF-Export pruefen.
+6. Historieneintrag pruefen.
 
-Scenario B — Public holiday exclusion
-1) Use a known nationwide holiday (e.g., 03.10) inside a range
-2) Verify holiday is counted as 0
-3) Export PDF succeeds and shows correct totals
-Repeat until 5 consecutive clean passes.
+Szenario B - Feiertagsausschluss
+1. Zeitraum mit bekanntem bundesweiten Feiertag waehlen (z. B. 03.10).
+2. Feiertag muss mit 0 zaehlen.
+3. PDF und Summen pruefen.
 
-Scenario C — Student mode, full school day blocks
-1) Enable Schülerparameter and set at least one weekday to "Voll"
-2) Choose a range that includes that weekday outside school holidays
-3) Verify the calculator returns a hard error and Export is blocked
-4) Verify the error message is German and clear
-Repeat until 5 consecutive clean passes.
+Szenario C - Schuelermodus, voller Schultag blockiert
+1. Schuelerparameter aktivieren und mindestens einen Wochentag auf Voll setzen.
+2. Zeitraum mit diesem Wochentag ausserhalb der Schulferien waehlen.
+3. Harte Fehlermeldung und blockierter Export muessen auftreten.
+4. Fehlermeldung muss klar und auf Deutsch sein.
 
-Scenario D — Student mode, half school day caps
-1) Set at least one weekday to "Halb"
-2) Choose a range that includes that weekday outside school holidays
-3) Verify that day counts max 0.5, and totals reflect it
-Repeat until 5 consecutive clean passes.
+Szenario D - Schuelermodus, halber Schultag
+1. Mindestens einen Wochentag auf Halb setzen.
+2. Zeitraum mit diesem Wochentag ausserhalb der Schulferien waehlen.
+3. Tag darf maximal 0,5 zaehlen und Summe muss stimmen.
 
-Scenario E — Half-day edge rule
-1) Create a multi-day range
-2) Apply StartHalfDay and/or EndHalfDay
-3) Verify only edges are capped and internal days are not affected
-4) Try an invalid half-day configuration and confirm it becomes a hard error
-Repeat until 5 consecutive clean passes.
+Szenario E - Halbtag nur am Rand
+1. Mehrtaegigen Zeitraum erstellen.
+2. StartHalfDay und/oder EndHalfDay setzen.
+3. Nur Randtage duerfen reduziert sein.
+4. Ungueltige Halbtag-Konfiguration muss harten Fehler ausloesen.
 
-Scenario F — Year boundary error
-1) Create a range that crosses 31.12 -> 01.01
-2) Verify hard error and Export blocked
-Repeat until 5 consecutive clean passes.
+Szenario F - Jahresgrenzenfehler
+1. Zeitraum ueber 31.12 auf 01.01 erstellen.
+2. Harten Fehler und blockierten Export pruefen.
 
-Scenario G — History workflow
-1) Create/export a request
-2) Approve it in History
-3) Verify remaining days reduced correctly
-4) Reject another request and verify remaining days are not reduced (and credit-back works if reservation exists)
-Repeat until 5 consecutive clean passes.
+Szenario G - Historienablauf
+1. Antrag erstellen/exportieren.
+2. In der Historie genehmigen.
+3. Resturlaub muss korrekt sinken.
+4. Einen anderen Antrag ablehnen und korrekte Rueckbuchung pruefen.
 
-11.4 After fixes, always re-verify full build/test/run
-Every time you apply a fix during these loops, you must run:
-- `dotnet build -c Release`
-- `dotnet test -c Release`
-- `dotnet run --project Urlaubstool.App`
+11.4 Nach jeder Korrektur immer Build, Test und Run erneut ausfuehren
+Nach jedem Fix in diesen Schleifen ist Pflicht:
+- dotnet build -c Release
+- dotnet test -c Release
+- dotnet run --project Urlaubstool.App
 
-11.5 Stop condition (success)
-You may stop only when:
-- The app starts successfully
-- All scenarios A–G have achieved 5 consecutive clean passes
-- `dotnet test -c Release` passes completely
+11.5 Abbruchbedingung (erfolgreich)
+Die Arbeit ist erst abgeschlossen, wenn:
+- die App stabil startet,
+- alle Szenarien A-G jeweils 5 saubere Durchlaeufe erreicht haben,
+- dotnet test -c Release komplett grün ist.
 
-No shortcuts. No TODOs. No "should work" claims without actually running.
+Keine Abkuerzungen, keine offenen TODOs und keine unbelegten Annahmen.

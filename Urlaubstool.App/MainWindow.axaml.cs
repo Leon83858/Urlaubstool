@@ -6,12 +6,17 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Urlaubstool.App.ViewModels;
 using Urlaubstool.Domain;
+using Urlaubstool.Infrastructure.Paths;
+using Urlaubstool.Infrastructure.Settings;
 
 namespace Urlaubstool.App;
 
 public partial class MainWindow : Window
 {
+    private const string CurrentAppVersion = "1.3.0";
     private readonly MainWindowViewModel _viewModel;
+    private readonly SettingsService _settingsService;
+    private Urlaubstool.Infrastructure.Settings.ColorSettings? _colorSettings;
 
     public MainWindow()
     {
@@ -21,6 +26,7 @@ public partial class MainWindow : Window
         Console.WriteLine("[DEBUG] InitializeComponent() completed");
         
         _viewModel = new MainWindowViewModel();
+        _settingsService = new SettingsService(new PathService());
         DataContext = _viewModel;
 
         Loaded += MainWindow_Loaded;
@@ -39,6 +45,49 @@ public partial class MainWindow : Window
     {
         await _viewModel.InitializeAsync();
         UpdateUI();
+        await LoadColorSettingsAsync();
+        await ShowPatchNotesOnFirstStartOfCurrentVersionAsync();
+    }
+
+    private async Task LoadColorSettingsAsync()
+    {
+        try
+        {
+            var settings = await _settingsService.LoadAsync();
+            _colorSettings = settings?.ColorSettings ?? Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[WARN] Could not load color settings: {ex.Message}");
+            _colorSettings = Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
+        }
+    }
+
+    private async Task ShowPatchNotesOnFirstStartOfCurrentVersionAsync()
+    {
+        try
+        {
+            var pathService = new PathService();
+            var markerDir = Path.Combine(pathService.GetAppDataDirectory(), "UI");
+            var markerFile = Path.Combine(markerDir, "patch_notes_seen_version.txt");
+
+            Directory.CreateDirectory(markerDir);
+
+            var seenVersion = File.Exists(markerFile) ? await File.ReadAllTextAsync(markerFile) : string.Empty;
+            if (string.Equals(seenVersion?.Trim(), CurrentAppVersion, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var infoWindow = new InfoWindow(openPatchNotesFirst: true);
+            await infoWindow.ShowDialog(this);
+
+            await File.WriteAllTextAsync(markerFile, CurrentAppVersion);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[WARN] Could not auto-open patch notes: {ex.Message}");
+        }
     }
 
     private void SetupUI()
@@ -177,7 +226,8 @@ public partial class MainWindow : Window
             _viewModel.State,
             _viewModel.StudentActive,
             _viewModel.VocationalSchoolSettings,
-            approvedVacationDates
+            approvedVacationDates,
+            _colorSettings
         );
         var result = await dialog.ShowDialog<(DateOnly, DateOnly)?>(this);
         
@@ -202,7 +252,8 @@ public partial class MainWindow : Window
             _viewModel.State,
             _viewModel.StudentActive,
             _viewModel.VocationalSchoolSettings,
-            approvedVacationDates
+            approvedVacationDates,
+            _colorSettings
         );
         var result = await dialog.ShowDialog<(DateOnly, DateOnly)?>(this);
         
@@ -258,36 +309,38 @@ public partial class MainWindow : Window
 
     // Calculate_Click removed: Calculation is triggered live from ViewModel property setters.
 
-    private void AddAzaDate_Click(object? sender, RoutedEventArgs e)
+    private async void AddAzaDate_Click(object? sender, RoutedEventArgs e)
     {
         try
         {
-            var picker = this.FindControl<DatePicker>("AzaNewDatePicker");
-            if (picker == null || !picker.SelectedDate.HasValue)
+            var approvedVacationDates = await _viewModel.GetApprovedVacationDatesAsync();
+            var azaDialog = new AzaDatePickerDialog(
+                initialDate: _viewModel.StartDate,
+                publicHolidayProvider: _viewModel.PublicHolidayProvider,
+                schoolHolidayProvider: _viewModel.SchoolHolidayProvider,
+                state: _viewModel.State,
+                studentActive: _viewModel.StudentActive,
+                vocationalSchoolDays: _viewModel.VocationalSchoolSettings,
+                approvedVacationDates: approvedVacationDates,
+                colorSettings: _colorSettings);
+
+            var selectedDate = await azaDialog.ShowDialog<DateOnly?>(this);
+            if (!selectedDate.HasValue)
             {
-                // No date selected
-                _ = ShowMessageBox("Hinweis", "Bitte wählen Sie ein Datum, bevor Sie es hinzufügen.");
                 return;
             }
 
-            var dto = picker.SelectedDate.Value;
-            var dateOnly = DateOnly.FromDateTime(dto.LocalDateTime);
-            _viewModel.AddAzaDate(dateOnly);
+            _viewModel.AddAzaDate(selectedDate.Value);
 
             // If VM reported an error (duplicate / out-of-range), show it to the user
             if (_viewModel.HasErrors && !string.IsNullOrEmpty(_viewModel.ErrorMessage))
             {
-                _ = ShowMessageBox("AZA hinzufügen fehlgeschlagen", _viewModel.ErrorMessage);
-            }
-            else
-            {
-                // Clear picker for next entry
-                picker.SelectedDate = null;
+                await ShowMessageBox("AZA hinzufügen fehlgeschlagen", _viewModel.ErrorMessage);
             }
         }
         catch (Exception ex)
         {
-            _ = ShowMessageBox("Fehler", ex.Message);
+            await ShowMessageBox("Fehler", ex.Message);
         }
     }
 
@@ -414,7 +467,14 @@ public partial class MainWindow : Window
         
         // Reload settings after window closes
         await _viewModel.ReloadSettingsAsync();
+        await LoadColorSettingsAsync();
         UpdateUI();
+    }
+
+    private async void Info_Click(object? sender, RoutedEventArgs e)
+    {
+        var infoWindow = new InfoWindow(openPatchNotesFirst: true);
+        await infoWindow.ShowDialog(this);
     }
 
     private async System.Threading.Tasks.Task ShowMessageBox(string title, string message)

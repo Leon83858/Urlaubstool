@@ -8,6 +8,21 @@ using Urlaubstool.Infrastructure.Paths;
 namespace Urlaubstool.Infrastructure.Settings;
 
 /// <summary>
+/// Color settings for calendar day type visualization (HEX format).
+/// Allows users to customize the appearance of vacation calendar.
+/// </summary>
+public sealed class ColorSettings
+{
+    public string SchultagGanztag { get; init; } = "#FFCDD2"; // Full vocational school day - red
+    public string Wochenende { get; init; } = "#C8E6C9"; // Weekend/Public holiday - green
+    public string SchultagHalbtag { get; init; } = "#FFE0B2"; // Half vocational school day - orange
+    public string GenehmigterUrlaub { get; init; } = "#E1BEE7"; // Already approved vacation - purple
+    public string Normaltag { get; init; } = "#0E1A2D"; // Normal workday - dark blue
+
+    public static ColorSettings CreateDefault() => new();
+}
+
+/// <summary>
 /// JSON Source Generator Context for AOT-compatible serialization.
 /// Provides type information to the JSON serializer without reflection.
 /// </summary>
@@ -38,6 +53,9 @@ public sealed class AppSettings
     // Export settings
     public string? ExportPath { get; init; } = null; // Custom export path (null = use default)
     
+    // Color settings (customizable via HEX codes)
+    public ColorSettings ColorSettings { get; init; } = ColorSettings.CreateDefault();
+    
     // Existing vacation config
     public string Klasse { get; init; } = string.Empty;
     public decimal Jahresurlaub { get; init; } = 0m;
@@ -60,7 +78,8 @@ public sealed class AppSettings
         Workdays = new HashSet<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday },
         StudentActive = false,
         Bundesland = null,
-        VocationalSchool = Enum.GetValues<DayOfWeek>().ToDictionary(d => d, _ => VocationalSchoolDayType.None)
+        VocationalSchool = Enum.GetValues<DayOfWeek>().ToDictionary(d => d, _ => VocationalSchoolDayType.None),
+        ColorSettings = ColorSettings.CreateDefault()
     };
 }
 
@@ -160,7 +179,8 @@ public sealed class SettingsService
             Workdays = settings.Workdays,
             StudentActive = settings.StudentActive,
             Bundesland = settings.Bundesland,
-            VocationalSchool = settings.VocationalSchool
+            VocationalSchool = settings.VocationalSchool,
+            ColorSettings = settings.ColorSettings
         };
     }
 
@@ -193,7 +213,8 @@ public sealed class SettingsService
                 Workdays = settings.Workdays,
                 StudentActive = settings.StudentActive,
                 Bundesland = settings.Bundesland,
-                VocationalSchool = settings.VocationalSchool
+                VocationalSchool = settings.VocationalSchool,
+                ColorSettings = settings.ColorSettings
             };
             await JsonSerializer.SerializeAsync(stream, settingsToSave, _jsonOptions);
         }

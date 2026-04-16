@@ -85,37 +85,68 @@ public partial class SettingsWindow : Window
     /// </summary>
     private void LoadSettings(AppSettings settings)
     {
-        // Personal information
-        VornameTextBox.Text = settings.Vorname;
+        // Ensure all controls are initialized
+        var vornameTextBox = this.FindControl<TextBox>("VornameTextBox");
+        var nachnameTextBox = this.FindControl<TextBox>("NachnameTextBox");
+        var adresseTextBox = this.FindControl<TextBox>("AdresseTextBox");
+        var abteilungTextBox = this.FindControl<TextBox>("AbteilungTextBox");
+        var personalnummerTextBox = this.FindControl<TextBox>("PersonalnummerTextBox");
+        var klasseTextBox = this.FindControl<TextBox>("KlasseTextBox");
+        var jahresurlaubTextBox = this.FindControl<TextBox>("JahresurlaubTextBox");
+        var exportPathTextBox = this.FindControl<TextBox>("ExportPathTextBox");
+        
+        // Control references for checkboxes
+        var mondayCheckBox = this.FindControl<CheckBox>("MondayCheckBox");
+        var tuesdayCheckBox = this.FindControl<CheckBox>("TuesdayCheckBox");
+        var wednesdayCheckBox = this.FindControl<CheckBox>("WednesdayCheckBox");
+        var thursdayCheckBox = this.FindControl<CheckBox>("ThursdayCheckBox");
+        var fridayCheckBox = this.FindControl<CheckBox>("FridayCheckBox");
+        var saturdayCheckBox = this.FindControl<CheckBox>("SaturdayCheckBox");
+        var sundayCheckBox = this.FindControl<CheckBox>("SundayCheckBox");
+        
+        // Color setting textboxes
+        var colorSchultagGanztag = this.FindControl<TextBox>("ColorSchultagGanztag");
+        var colorWochenende = this.FindControl<TextBox>("ColorWochenende");
+        var colorSchultagHalbtag = this.FindControl<TextBox>("ColorSchultagHalbtag");
+        var colorGenehmigterUrlaub = this.FindControl<TextBox>("ColorGenehmigterUrlaub");
+        var colorNormaltag = this.FindControl<TextBox>("ColorNormaltag");
+
+        // Return early if critical controls are missing
+        if (vornameTextBox == null || nachnameTextBox == null) return;
+
+        // Personal info
+        vornameTextBox.Text = settings.Vorname;
+        
         // If Nachname is empty but Name has value, try to extract last name from Name
         if (string.IsNullOrEmpty(settings.Nachname) && !string.IsNullOrEmpty(settings.Name))
         {
             System.Diagnostics.Debug.WriteLine($"[SettingsWindow.LoadSettings] Detected legacy Name-only format, attempting migration: {settings.Name}");
             var parts = settings.Name.Split(new[] { ' ' }, 2);
-            NachnameTextBox.Text = parts.Length > 1 ? parts[1] : settings.Name;
-            System.Diagnostics.Debug.WriteLine($"[SettingsWindow.LoadSettings] Migrated Nachname: {NachnameTextBox.Text}");
+            nachnameTextBox.Text = parts.Length > 1 ? parts[1] : settings.Name;
+            System.Diagnostics.Debug.WriteLine($"[SettingsWindow.LoadSettings] Migrated Nachname: {nachnameTextBox.Text}");
         }
         else
         {
-            NachnameTextBox.Text = settings.Nachname;
+            nachnameTextBox.Text = settings.Nachname;
         }
-        AdresseTextBox.Text = settings.Adresse;
-        AbteilungTextBox.Text = settings.Abteilung;
-        PersonalnummerTextBox.Text = settings.Personalnummer;
-        KlasseTextBox.Text = settings.Klasse;
-        JahresurlaubTextBox.Text = settings.Jahresurlaub.ToString(CultureInfo.InvariantCulture);
+        
+        if (adresseTextBox != null) adresseTextBox.Text = settings.Adresse;
+        if (abteilungTextBox != null) abteilungTextBox.Text = settings.Abteilung;
+        if (personalnummerTextBox != null) personalnummerTextBox.Text = settings.Personalnummer;
+        if (klasseTextBox != null) klasseTextBox.Text = settings.Klasse;
+        if (jahresurlaubTextBox != null) jahresurlaubTextBox.Text = settings.Jahresurlaub.ToString(CultureInfo.InvariantCulture);
         
         // Export settings
-        ExportPathTextBox.Text = settings.ExportPath ?? string.Empty;
+        if (exportPathTextBox != null) exportPathTextBox.Text = settings.ExportPath ?? string.Empty;
 
         // Workdays checkboxes
-        MondayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Monday);
-        TuesdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Tuesday);
-        WednesdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Wednesday);
-        ThursdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Thursday);
-        FridayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Friday);
-        SaturdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Saturday);
-        SundayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Sunday);
+        if (mondayCheckBox != null) mondayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Monday);
+        if (tuesdayCheckBox != null) tuesdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Tuesday);
+        if (wednesdayCheckBox != null) wednesdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Wednesday);
+        if (thursdayCheckBox != null) thursdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Thursday);
+        if (fridayCheckBox != null) fridayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Friday);
+        if (saturdayCheckBox != null) saturdayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Saturday);
+        if (sundayCheckBox != null) sundayCheckBox.IsChecked = settings.Workdays.Contains(DayOfWeek.Sunday);
 
         // Student parameters
         StudentActiveCheckBox.IsChecked = settings.StudentActive;
@@ -139,6 +170,20 @@ public partial class SettingsWindow : Window
         FridayVocCombo.SelectedIndex = (int)settings.VocationalSchool.GetValueOrDefault(DayOfWeek.Friday, VocationalSchoolDayType.None);
         SaturdayVocCombo.SelectedIndex = (int)settings.VocationalSchool.GetValueOrDefault(DayOfWeek.Saturday, VocationalSchoolDayType.None);
         SundayVocCombo.SelectedIndex = (int)settings.VocationalSchool.GetValueOrDefault(DayOfWeek.Sunday, VocationalSchoolDayType.None);
+
+        // Load color settings
+        if (colorSchultagGanztag != null || colorWochenende != null || colorSchultagHalbtag != null || colorGenehmigterUrlaub != null || colorNormaltag != null)
+        {
+            var colors = settings.ColorSettings ?? Urlaubstool.Infrastructure.Settings.ColorSettings.CreateDefault();
+            if (colorSchultagGanztag != null) colorSchultagGanztag.Text = colors.SchultagGanztag;
+            if (colorWochenende != null) colorWochenende.Text = colors.Wochenende;
+            if (colorSchultagHalbtag != null) colorSchultagHalbtag.Text = colors.SchultagHalbtag;
+            if (colorGenehmigterUrlaub != null) colorGenehmigterUrlaub.Text = colors.GenehmigterUrlaub;
+            if (colorNormaltag != null) colorNormaltag.Text = colors.Normaltag;
+            
+            // Update color previews
+            UpdateAllColorPreviews();
+        }
     }
 
     /// <summary>
@@ -206,6 +251,42 @@ public partial class SettingsWindow : Window
 
         try
         {
+            // Validate HEX color codes
+            if (!IsValidHexColor(ColorSchultagGanztag.Text))
+            {
+                ShowError("Ganztägiger Schultag: Ungültiger HEX-Farbcode (Format: #RRGGBB)");
+                return;
+            }
+            if (!IsValidHexColor(ColorWochenende.Text))
+            {
+                ShowError("Wochenende/Feiertag: Ungültiger HEX-Farbcode (Format: #RRGGBB)");
+                return;
+            }
+            if (!IsValidHexColor(ColorSchultagHalbtag.Text))
+            {
+                ShowError("Halbtägiger Schultag: Ungültiger HEX-Farbcode (Format: #RRGGBB)");
+                return;
+            }
+            if (!IsValidHexColor(ColorGenehmigterUrlaub.Text))
+            {
+                ShowError("Genehmigter Urlaub: Ungültiger HEX-Farbcode (Format: #RRGGBB)");
+                return;
+            }
+            if (!IsValidHexColor(ColorNormaltag.Text))
+            {
+                ShowError("Normaltag: Ungültiger HEX-Farbcode (Format: #RRGGBB)");
+                return;
+            }
+
+            var colorSettings = new Urlaubstool.Infrastructure.Settings.ColorSettings
+            {
+                SchultagGanztag = ColorSchultagGanztag.Text.Trim(),
+                Wochenende = ColorWochenende.Text.Trim(),
+                SchultagHalbtag = ColorSchultagHalbtag.Text.Trim(),
+                GenehmigterUrlaub = ColorGenehmigterUrlaub.Text.Trim(),
+                Normaltag = ColorNormaltag.Text.Trim()
+            };
+
             var settings = new AppSettings
             {
                 Name = $"{VornameTextBox.Text} {NachnameTextBox.Text}".Trim(), // Computed for backward compatibility
@@ -220,7 +301,8 @@ public partial class SettingsWindow : Window
                 Workdays = workdays,
                 StudentActive = StudentActiveCheckBox.IsChecked == true,
                 Bundesland = BundeslandComboBox.SelectedItem as string,
-                VocationalSchool = vocationalSchool
+                VocationalSchool = vocationalSchool,
+                ColorSettings = colorSettings
             };
 
             await _settingsService.SaveAsync(settings);
@@ -235,6 +317,21 @@ public partial class SettingsWindow : Window
     private void Cancel_Click(object? sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private bool IsValidHexColor(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+        
+        text = text.Trim();
+        
+        // Must start with # and be exactly 7 chars long (e.g., #RRGGBB)
+        if (!text.StartsWith("#") || text.Length != 7)
+            return false;
+        
+        // Remaining 6 chars must be valid hex digits
+        return System.Text.RegularExpressions.Regex.IsMatch(text, "^#[0-9A-Fa-f]{6}$");
     }
 
     private async void BrowseExportPath_Click(object? sender, RoutedEventArgs e)
@@ -264,5 +361,68 @@ public partial class SettingsWindow : Window
     {
         ValidationErrorTextBlock.Text = message;
         ValidationErrorTextBlock.IsVisible = true;
+    }
+
+    // Color preview and reset handlers
+    private void OnColorTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        UpdateAllColorPreviews();
+    }
+
+    private void UpdateAllColorPreviews()
+    {
+        UpdateColorPreview(ColorSchultagGanztag, "ColorSchultagGanztagPreview");
+        UpdateColorPreview(ColorWochenende, "ColorWochenendePreview");
+        UpdateColorPreview(ColorSchultagHalbtag, "ColorSchultagHalbtag_Preview");
+        UpdateColorPreview(ColorGenehmigterUrlaub, "ColorGenehmigterUrlaubPreview");
+        UpdateColorPreview(ColorNormaltag, "ColorNormaltagPreview");
+    }
+
+    private void UpdateColorPreview(TextBox colorTextBox, string previewBorderName)
+    {
+        var previewBorder = this.FindControl<Border>(previewBorderName);
+        if (previewBorder == null || string.IsNullOrWhiteSpace(colorTextBox.Text))
+            return;
+
+        try
+        {
+            var color = Avalonia.Media.Color.Parse(colorTextBox.Text);
+            previewBorder.Background = new Avalonia.Media.SolidColorBrush(color);
+        }
+        catch
+        {
+            // Invalid color code - show default light gray
+            previewBorder.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#CCCCCC"));
+        }
+    }
+
+    private void ResetColorSchultagGanztag_Click(object? sender, RoutedEventArgs e)
+    {
+        ColorSchultagGanztag.Text = "#FFCDD2";
+        UpdateColorPreview(ColorSchultagGanztag, "ColorSchultagGanztagPreview");
+    }
+
+    private void ResetColorWochenende_Click(object? sender, RoutedEventArgs e)
+    {
+        ColorWochenende.Text = "#C8E6C9";
+        UpdateColorPreview(ColorWochenende, "ColorWochenendePreview");
+    }
+
+    private void ResetColorSchultagHalbtag_Click(object? sender, RoutedEventArgs e)
+    {
+        ColorSchultagHalbtag.Text = "#FFE0B2";
+        UpdateColorPreview(ColorSchultagHalbtag, "ColorSchultagHalbtag_Preview");
+    }
+
+    private void ResetColorGenehmigterUrlaub_Click(object? sender, RoutedEventArgs e)
+    {
+        ColorGenehmigterUrlaub.Text = "#E1BEE7";
+        UpdateColorPreview(ColorGenehmigterUrlaub, "ColorGenehmigterUrlaubPreview");
+    }
+
+    private void ResetColorNormaltag_Click(object? sender, RoutedEventArgs e)
+    {
+        ColorNormaltag.Text = "#0E1A2D";
+        UpdateColorPreview(ColorNormaltag, "ColorNormaltagPreview");
     }
 }

@@ -47,7 +47,7 @@ printf '<?xml version="1.0" encoding="UTF-8"?>
     <key>CFBundleDisplayName</key>
     <string>Urlaubstool</string>
     <key>CFBundleIdentifier</key>
-    <string>com.leonpilger.urlaubstool</string>
+    <string>com.urlaubstool.app</string>
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
     <key>CFBundleShortVersionString</key>

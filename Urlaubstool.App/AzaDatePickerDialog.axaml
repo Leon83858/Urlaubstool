@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Urlaubstool.App.Controls"
+        x:Class="Urlaubstool.App.AzaDatePickerDialog"
+        Title="AZA-Tag auswählen"
+        Width="520"
+        Height="680"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <DockPanel Margin="16">
+        <!-- Title Section (Fixed at Top) -->
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,12">
+            <TextBlock Text="AZA-Tag im Kalender auswählen" FontWeight="Bold" FontSize="16" />
+            <TextBlock Text="Es kann genau ein Tag ausgewählt werden." Classes="muted" FontSize="12" />
+        </StackPanel>
+
+        <!-- Button Bar (Fixed at Bottom) -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,12,0,0">
+            <Button Content="Abbrechen" Width="120" Click="Cancel_Click" />
+            <Button Content="OK" Width="120" Click="Confirm_Click" FontWeight="Bold" IsDefault="True" />
+        </StackPanel>
+
+        <!-- Calendar (Takes remaining space) -->
+        <controls:DateRangePickerControl x:Name="AzaCalendarPicker" />
+    </DockPanel>
+</Window>
