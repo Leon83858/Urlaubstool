@@ -23,7 +23,7 @@ Es ist keine eigene Entwicklungsumgebung erforderlich.
 
 ## Systemunterstützung
 - Windows (x64, ARM64)
-- macOS (Apple Silicon und Intel, je nach Build)
+- macOS (Apple Silicon)
 
 ## Erste Schritte
 1. App starten.
