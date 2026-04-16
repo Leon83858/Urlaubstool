@@ -1,36 +1,36 @@
 # Urlaubstool
 
-Urlaubstool ist eine Desktop-Anwendung zur Planung und Dokumentation von Urlaubsantraegen.
-Die App berechnet Urlaubstage automatisch, beruecksichtigt Feiertage sowie optionale Berufsschulregeln und erzeugt druckfertige PDF-Antraege.
+Urlaubstool ist eine Desktop-Anwendung zur Planung und Dokumentation von Urlaubsanträgen.
+Die App berechnet Urlaubstage automatisch, berücksichtigt Feiertage sowie optionale Berufsschulregeln und erzeugt druckfertige PDF-Anträge.
 
 ## Für wen ist die App gedacht?
 - Mitarbeitende mit klassischer Urlaubsplanung
 - Auszubildende mit Berufsschul- und Ferienlogik
-- Teams, die Urlaubsantraege lokal und ohne Cloud speichern moechten
+- Teams, die Urlaubsanträge lokal und ohne Cloud speichern möchten
 
 ## Hauptfunktionen
-- Urlaub von Start- bis Enddatum ueber Kalender auswaehlen
+- Urlaub von Start- bis Enddatum über Kalender auswählen
 - AZA-Tage (Arbeitszeitausgleich) als 0-Tage markieren
-- Halbtag-Regeln am Start- und Enddatum beruecksichtigen
+- Halbtag-Regeln am Start- und Enddatum berücksichtigen
 - Automatische Berechnung von beantragt, verbraucht und Resturlaub
 - PDF-Export des Urlaubsantrags
 - Historie mit Status (z. B. genehmigt, abgelehnt, archiviert)
 - Frei konfigurierbare Kalenderfarben per HEX-Code in den Einstellungen
 
 ## Auslieferung als Executable
-Die Anwendung ist fuer die direkte Nutzung als fertige Executable/App ausgelegt.
+Die Anwendung ist für die direkte Nutzung als fertige Executable/App ausgelegt.
 Es ist keine eigene Entwicklungsumgebung erforderlich.
 
-## Systemunterstuetzung
+## Systemunterstützung
 - Windows (x64, ARM64)
 - macOS (Apple Silicon und Intel, je nach Build)
 
 ## Erste Schritte
 1. App starten.
-2. Beim ersten Start die Einstellungen ausfuellen (Name, Jahresurlaub, Arbeitstage usw.).
-3. Zeitraum im Kalender waehlen.
+2. Beim ersten Start die Einstellungen ausfüllen (Name, Jahresurlaub, Arbeitstage usw.).
+3. Zeitraum im Kalender wählen.
 4. Optional Halbtag oder AZA-Tage setzen.
-5. Ergebnis pruefen und PDF exportieren.
+5. Ergebnis prüfen und PDF exportieren.
 
 ## Speicherorte der App-Daten
 - macOS
@@ -43,14 +43,14 @@ Es ist keine eigene Entwicklungsumgebung erforderlich.
   - Standardordner: ~/Documents/Urlaubstool/Exports/
 
 ## Wichtige Regeln auf einen Blick
-- Wochenenden und gesetzliche Feiertage zaehlen nicht als Urlaubstage.
-- Ganztags-Berufsschultage koennen Urlaub blockieren.
+- Wochenenden und gesetzliche Feiertage zählen nicht als Urlaubstage.
+- Ganztags-Berufsschultage können Urlaub blockieren.
 - Halbe Berufsschultage werden mit maximal 0,5 Urlaubstag berechnet.
-- Jahresuebergreifende Urlaubszeiträume sind nicht erlaubt.
+- Jahresübergreifende Urlaubszeiträume sind nicht erlaubt.
 
 ## Datenschutz und Offline-Betrieb
 - Die App arbeitet lokal und kann ohne Internet betrieben werden.
-- Es werden keine Cloud-Konten fuer den Normalbetrieb benoetigt.
+- Es werden keine Cloud-Konten für den Normalbetrieb benötigt.
 
 ## Support
-Bei Problemen bitte mit kurzer Fehlerbeschreibung, Plattform (Windows/macOS) und App-Version ein Issue im Repository erstellen.
+Bei Problemen bitte mit kurzer Fehlerbeschreibung, Plattform (Windows/macOS) und App-Version ein Issü im Repository erstellen.
