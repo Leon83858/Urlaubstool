@@ -53,4 +53,4 @@ Es ist keine eigene Entwicklungsumgebung erforderlich.
 - Es werden keine Cloud-Konten für den Normalbetrieb benötigt.
 
 ## Support
-Bei Problemen bitte mit kurzer Fehlerbeschreibung, Plattform (Windows/macOS) und App-Version ein Issü im Repository erstellen.
+Bei Problemen bitte mit kurzer Fehlerbeschreibung, Plattform (Windows/macOS) und App-Version ein issue im Repository erstellen.
