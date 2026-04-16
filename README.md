@@ -3,7 +3,7 @@
 Urlaubstool ist eine Desktop-Anwendung zur Planung und Dokumentation von Urlaubsantraegen.
 Die App berechnet Urlaubstage automatisch, beruecksichtigt Feiertage sowie optionale Berufsschulregeln und erzeugt druckfertige PDF-Antraege.
 
-## Fuer wen ist die App gedacht?
+## FÜr wen ist die App gedacht?
 - Mitarbeitende mit klassischer Urlaubsplanung
 - Auszubildende mit Berufsschul- und Ferienlogik
 - Teams, die Urlaubsantraege lokal und ohne Cloud speichern moechten
