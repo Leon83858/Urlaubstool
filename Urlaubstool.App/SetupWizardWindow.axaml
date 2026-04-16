@@ -1,0 +1,198 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Urlaubstool.App.ViewModels"
+        x:Class="Urlaubstool.App.SetupWizardWindow"
+        Title="Ersteinrichtung - Urlaubstool"
+        Width="700"
+        Height="750"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+
+    <Design.DataContext>
+        <vm:SetupWizardViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="#F5F5F5">
+            <MenuItem Header="Datei">
+                <MenuItem Header="Abbrechen" Click="Exit_Click" />
+            </MenuItem>
+        </Menu>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30" Spacing="20">
+            <TextBlock Text="Willkommen zum Urlaubstool" FontSize="28" FontWeight="Bold" />
+            <TextBlock Text="Bitte geben Sie Ihre Grundeinstellungen ein:" FontSize="14" Foreground="Gray" />
+
+            <!-- Personal Information -->
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Persönliche Angaben" FontWeight="Bold" FontSize="16" />
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Vorname:" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="VornameTextBox" Watermark="z.B. Max" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Nachname:" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="NachnameTextBox" Watermark="z.B. Müller" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Adresse:" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="AdresseTextBox" 
+                                 Watermark="z.B. Hauptstr. 10, 12345 Ort" 
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 Height="60"
+                                 Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Abteilung:" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="AbteilungTextBox" Watermark="z.B. IT" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Personalnummer:" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="PersonalnummerTextBox" Watermark="Optional" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Klasse:" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="KlasseTextBox" Watermark="z.B. FI1" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Jahresurlaub (Tage):" VerticalAlignment="Center" Margin="0,8,0,0" />
+                        <TextBox Grid.Row="6" Grid.Column="1" x:Name="JahresurlaubTextBox" Watermark="z.B. 30 oder 28,5" Margin="0,8,0,0" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Work Days -->
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Arbeitstage" FontWeight="Bold" FontSize="16" />
+                    <TextBlock Text="Wählen Sie Ihre Arbeitstage aus:" FontSize="12" Classes="muted" />
+                    
+                    <WrapPanel>
+                        <CheckBox x:Name="MondayCheckBox" Content="Montag" IsChecked="True" Margin="0,0,15,8" />
+                        <CheckBox x:Name="TuesdayCheckBox" Content="Dienstag" IsChecked="True" Margin="0,0,15,8" />
+                        <CheckBox x:Name="WednesdayCheckBox" Content="Mittwoch" IsChecked="True" Margin="0,0,15,8" />
+                        <CheckBox x:Name="ThursdayCheckBox" Content="Donnerstag" IsChecked="True" Margin="0,0,15,8" />
+                        <CheckBox x:Name="FridayCheckBox" Content="Freitag" IsChecked="True" Margin="0,0,15,8" />
+                        <CheckBox x:Name="SaturdayCheckBox" Content="Samstag" Margin="0,0,15,8" />
+                        <CheckBox x:Name="SundayCheckBox" Content="Sonntag" Margin="0,0,15,8" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Student Parameters -->
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <CheckBox x:Name="StudentActiveCheckBox" Content="Schülerparameter aktivieren" FontWeight="Bold" FontSize="14" />
+                    
+                    <StackPanel x:Name="StudentParametersPanel" Spacing="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Text="Bundesland:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Column="1" x:Name="BundeslandComboBox" />
+                        </Grid>
+
+                        <TextBlock Text="Berufsschultage:" FontWeight="SemiBold" Margin="0,10,0,5" />
+                        <TextBlock Text="Für jeden Wochentag:" FontSize="12" Classes="muted" Margin="0,0,0,5" />
+                        
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Montag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="MondayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Dienstag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" x:Name="TuesdayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Mittwoch:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="WednesdayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Donnerstag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="3" Grid.Column="1" x:Name="ThursdayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Freitag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="4" Grid.Column="1" x:Name="FridayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Samstag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="5" Grid.Column="1" x:Name="SaturdayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Sonntag:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="6" Grid.Column="1" x:Name="SundayVocationalComboBox" Margin="0,2">
+                                <ComboBoxItem Content="Kein Schultag" />
+                                <ComboBoxItem Content="Halbtag" />
+                                <ComboBoxItem Content="Ganztag" />
+                            </ComboBox>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Validation Error -->
+            <TextBlock x:Name="ValidationErrorTextBlock" 
+                       Foreground="Red" 
+                       FontWeight="Bold"
+                       TextWrapping="Wrap"
+                       IsVisible="False" />
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <Button Content="Abbrechen" Width="120" x:Name="CancelButton" Click="Cancel_Click" />
+                <Button Content="Speichern &amp; Weiter" Width="150" x:Name="SaveButton" Click="Save_Click" 
+                        Background="#1976D2" Foreground="White" FontWeight="Bold" />
+            </StackPanel>
+        </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

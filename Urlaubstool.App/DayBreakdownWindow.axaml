@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Urlaubstool.App.ViewModels"
+        x:Class="Urlaubstool.App.DayBreakdownWindow"
+        Title="Tagesaufschlüsselung"
+        Width="600"
+        Height="400"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="True">
+
+    <DockPanel>
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Margin="20,20,20,10" Spacing="5">
+            <TextBlock Text="Tagesaufschlüsselung" FontSize="20" FontWeight="Bold" />
+            <TextBlock x:Name="SummaryTextBlock" FontSize="12" Classes="muted" />
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="BreakdownDataGrid"
+                  Margin="20,10,20,20"
+                  AutoGenerateColumns="False"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="All"
+                  Background="{DynamicResource Brush.Surface}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Datum" Binding="{Binding DateString}" Width="100" IsReadOnly="True" />
+                <DataGridTextColumn Header="Wochentag" Binding="{Binding DayOfWeek}" Width="90" IsReadOnly="True" />
+                <DataGridTextColumn Header="Tage" Binding="{Binding DaysString}" Width="60" IsReadOnly="True" />
+                <DataGridTextColumn Header="Hinweise" Binding="{Binding Badges}" Width="*" IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

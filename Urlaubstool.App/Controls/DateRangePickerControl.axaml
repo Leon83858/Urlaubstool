@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Urlaubstool.App.Controls.DateRangePickerControl"
+             Padding="0">
+
+    <StackPanel Spacing="12">
+        <!-- Month Navigation -->
+        <Grid ColumnDefinitions="Auto,*,Auto" Height="40" RowDefinitions="*">
+            <Button Grid.Column="0" Content="◀" HorizontalAlignment="Left" Width="40" Height="40" 
+                    Click="PreviousMonth_Click" ToolTip.Tip="Vorheriger Monat" 
+                    Background="{DynamicResource Brush.Control}" />
+            <TextBlock Grid.Column="1" x:Name="MonthYearLabel" 
+                       Text="April 2026" 
+                       FontSize="16" FontWeight="Bold"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" />
+            <Button Grid.Column="2" Content="▶" HorizontalAlignment="Right" Width="40" Height="40"
+                    Click="NextMonth_Click" ToolTip.Tip="Nächster Monat"
+                    Background="{DynamicResource Brush.Control}" />
+        </Grid>
+
+        <!-- Calendar Grid -->
+        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="6"
+                Background="{DynamicResource Brush.Surface}">
+            <Grid x:Name="CalendarGrid" ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="Auto,40,40,40,40,40,40"
+                  Margin="4" ShowGridLines="False">
+                <!-- Day headers -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Mo" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Di" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Mi" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="Do" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="Fr" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="5" Text="Sa" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+                <TextBlock Grid.Row="0" Grid.Column="6" Text="So" FontWeight="Bold" TextAlignment="Center" Padding="4,8" Foreground="{DynamicResource Brush.Muted}" />
+            </Grid>
+        </Border>
+
+        <!-- Selected dates display with errors -->
+        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" 
+                Padding="8" CornerRadius="6" Background="{DynamicResource Brush.Surface}">
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="SelectedRangeLabel" 
+                           Text="Zeitraum: Nicht gewählt"
+                           FontSize="13"
+                           FontWeight="SemiBold" />
+                <TextBlock x:Name="DaysCountLabel" 
+                           Text=""
+                           FontSize="12" Classes="muted" />
+                <TextBlock x:Name="ErrorLabel"
+                           Text=""
+                           FontSize="11"
+                           Foreground="#FF5D6C"
+                           IsVisible="False"
+                           TextWrapping="Wrap"
+                           Margin="0,4,0,0" />
+            </StackPanel>
+        </Border>
+
+        <!-- Color Legend -->
+        <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" 
+                Padding="8" CornerRadius="6" Background="{DynamicResource Brush.Surface}">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Legende:" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Muted}" />
+                
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="16" Height="16" CornerRadius="2" Background="#C8E6C9" BorderBrush="#66BB6A" BorderThickness="1" />
+                    <TextBlock Text="Wochenende / Feiertag" FontSize="10" VerticalAlignment="Center" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="16" Height="16" CornerRadius="2" Background="#FFE0B2" BorderBrush="#FF9800" BorderThickness="1" />
+                    <TextBlock Text="Halbtag Berufsschule (max. 0.5 Tage Urlaub)" FontSize="10" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="16" Height="16" CornerRadius="2" Background="#E1BEE7" BorderBrush="#8E24AA" BorderThickness="1" />
+                    <TextBlock Text="Bereits genehmigter Urlaub" FontSize="10" VerticalAlignment="Center" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Width="16" Height="16" CornerRadius="2" Background="#0E1A2D" BorderBrush="#20324F" BorderThickness="1" />
+                    <TextBlock Text="Normaler Arbeitstag" FontSize="10" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>
+

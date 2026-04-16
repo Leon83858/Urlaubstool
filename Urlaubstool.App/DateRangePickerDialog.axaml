@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Urlaubstool.App.Controls"
+        x:Class="Urlaubstool.App.DateRangePickerDialog"
+        Title="Urlaubszeitraum auswählen"
+        Width="550"
+        Height="650"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+
+    <StackPanel Spacing="16" Margin="20">
+        <!-- Instructions -->
+        <TextBlock Text="Wählen Sie den Anreisedatum und dann das Abreisedatum" 
+                   FontSize="13" Classes="muted" TextWrapping="Wrap" />
+
+        <!-- Calendar -->
+        <controls:DateRangePickerControl x:Name="DateRangePicker" />
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button x:Name="CancelButton" Content="Abbrechen" Width="100" Click="Cancel_Click" />
+            <Button x:Name="ConfirmButton" Content="Bestätigen" Width="100" Click="Confirm_Click" 
+                    Background="#2196F3" Foreground="White" FontWeight="Bold" />
+        </StackPanel>
+    </StackPanel>
+</Window>

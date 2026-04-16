@@ -1,0 +1,288 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fluent="clr-namespace:Avalonia.Themes.Fluent;assembly=Avalonia.Themes.Fluent"
+             xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
+             x:Class="Urlaubstool.App.App">
+  <Application.Styles>
+    <!-- Fluent theme (theme variant will be set programmatically) -->
+    <fluent:FluentTheme />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+    <!-- Window background and foreground -->
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
+      <Setter Property="FontFamily" Value="Segoe UI Variable, Inter, Segoe UI, Arial" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="DockPanel">
+      <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
+    </Style>
+
+    <!-- Menu styling -->
+    <Style Selector="Menu">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="MenuItem">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="MenuItem:pointerover, MenuItem:pressed, MenuItem:selected">
+      <Setter Property="Background" Value="{DynamicResource Brush.ControlHover}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <!-- TextBlock styling -->
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="TextBlock.section-title">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="18" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <!-- Card/Border styling -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="15" />
+    </Style>
+
+    <Style Selector="Border.card:pointerover">
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+    </Style>
+
+    <!-- TextBox styling -->
+    <Style Selector="TextBox">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="8,6" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="CaretBrush" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="SelectionBrush" Value="{DynamicResource Brush.Selection}" />
+      <Setter Property="SelectionForegroundBrush" Value="{DynamicResource Brush.SelectionForeground}" />
+    </Style>
+
+    <Style Selector="TextBox:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Brush.ControlHover}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+    </Style>
+
+    <Style Selector="TextBox:focus, TextBox:focus-within">
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.FocusRing}" />
+      <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <!-- ComboBox styling -->
+    <Style Selector="ComboBox">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="8,6" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="ComboBox:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Brush.ControlHover}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+    </Style>
+
+    <Style Selector="ComboBox:focus, ComboBox:focus-within">
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.FocusRing}" />
+    </Style>
+
+    <!-- DatePicker styling -->
+    <Style Selector="DatePicker">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <Style Selector="DatePicker:pointerover /template/ Border#Background">
+      <Setter Property="Background" Value="{DynamicResource Brush.ControlHover}" />
+    </Style>
+
+    <Style Selector="DatePicker:focus /template/ Border#Background">
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+    </Style>
+
+    <!-- NumericUpDown styling -->
+    <Style Selector="NumericUpDown">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <!-- Button styling -->
+    <Style Selector="Button">
+      <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding" Value="12,6" />
+    </Style>
+
+    <Style Selector="Button:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Brush.AccentHover}" />
+    </Style>
+
+    <!-- CheckBox styling -->
+    <Style Selector="CheckBox">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <!-- ScrollViewer styling -->
+    <Style Selector="ScrollViewer">
+      <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
+    </Style>
+
+    <!-- DataGrid styling -->
+    <Style Selector="DataGrid">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderSoft}" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="DataGridRow">
+      <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+
+    <Style Selector="DataGridRow:nth-child(even)">
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+    </Style>
+
+    <!-- DatePicker Popup Styling -->
+    <Style Selector="DatePickerPresenter /template/ Rectangle#Highlight">
+      <!-- semitransparenter Balken für die aktuell ausgewählte Zeile -->
+      <Setter Property="Fill" Value="{DynamicResource Brush.Selection}" />
+
+      <!-- klare Kontur für besseren Kontrast auf dunklem Background -->
+      <Setter Property="Stroke" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="StrokeThickness" Value="2" />
+
+      <!-- WICHTIG: Highlight muss sichtbar sein (nicht hinter den Items) -->
+      <Setter Property="ZIndex" Value="10" />
+
+      <!-- optional: leicht runder Look -->
+      <Setter Property="RadiusX" Value="6" />
+      <Setter Property="RadiusY" Value="6" />
+    </Style>
+
+    <!-- Fallback 1: falls Highlight im Fluent-Template ein Border ist -->
+    <Style Selector="DatePickerPresenter /template/ Border#Highlight">
+      <Setter Property="Background" Value="{DynamicResource Brush.Selection}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="ZIndex" Value="10" />
+    </Style>
+
+    <!-- Fallback 2: häufige PART-Namen-Variante -->
+    <Style Selector="DatePickerPresenter /template/ Border#PART_Highlight">
+      <Setter Property="Background" Value="{DynamicResource Brush.Selection}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="ZIndex" Value="10" />
+    </Style>
+
+    <!-- Basis für Items im DatePicker-Popup: keine globale ListBox, nur im Presenter -->
+    <Style Selector="DatePickerPresenter ListBoxItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+      <Setter Property="Padding" Value="10,6" />
+      <!-- Margin links/rechts anpassen, damit die Rahmen aneinanderstoßen -->
+      <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- Hover im DatePicker-Popup -->
+    <Style Selector="DatePickerPresenter ListBoxItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Brush.ControlHover}" />
+    </Style>
+
+    <!-- AUSWAHL: Workaround für durchgehende Optik -->
+    <Style Selector="DatePickerPresenter ListBoxItem:selected">
+      <Setter Property="Background" Value="{DynamicResource Brush.Selection}" />
+      <!-- Nur oben/unten Rahmen -> wirkt wie eine durchgehende Zeile -->
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+      <Setter Property="BorderThickness" Value="0,2,0,2" />
+    </Style>
+
+    <!-- Text in ausgewählter Zeile etwas kräftiger -->
+    <Style Selector="DatePickerPresenter ListBoxItem:selected TextBlock">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+  </Application.Styles>
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <!-- Load color resources -->
+        <ResourceInclude Source="avares://Urlaubstool.App/Colors.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <!-- Default active colors (dark theme) -->
+      <Color x:Key="Color.Bg">#0B1220</Color>
+      <Color x:Key="Color.Surface">#111F36</Color>
+      <Color x:Key="Color.Control">#0E1A2D</Color>
+      <Color x:Key="Color.Border">#20324F</Color>
+      <Color x:Key="Color.Text">#E7EEF8</Color>
+      <Color x:Key="Color.TextMuted">#A9B8D0</Color>
+      <Color x:Key="Color.Accent">#2EA8FF</Color>
+      <Color x:Key="Color.Danger">#FF5D6C</Color>
+      <Color x:Key="Color.Success">#2AD39A</Color>
+      <Color x:Key="Color.FocusRing">#662EA8FF</Color>
+
+      <!-- Brushes -->
+      <SolidColorBrush x:Key="Brush.Bg" Color="{StaticResource Color.Bg}" />
+      <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}" />
+      <SolidColorBrush x:Key="Brush.Control" Color="{StaticResource Color.Control}" />
+      <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}" />
+      <SolidColorBrush x:Key="Brush.Text" Color="{StaticResource Color.Text}" />
+      <SolidColorBrush x:Key="Brush.TextMuted" Color="{StaticResource Color.TextMuted}" />
+      <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}" />
+      <SolidColorBrush x:Key="Brush.Danger" Color="{StaticResource Color.Danger}" />
+      <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
+      <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="Brush.OnDanger" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="Brush.ControlHover" Color="#0F1E31" />
+      <SolidColorBrush x:Key="Brush.ControlPressed" Color="#0D1926" />
+      <SolidColorBrush x:Key="Brush.BorderSoft" Color="#1A2940" />
+      <SolidColorBrush x:Key="Brush.FocusRing" Color="{StaticResource Color.FocusRing}" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#3FB2FF" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#1C95E8" />
+      <SolidColorBrush x:Key="Brush.DangerHover" Color="#FF7080" />
+      <SolidColorBrush x:Key="Brush.DangerPressed" Color="#E64A58" />
+      <SolidColorBrush x:Key="Brush.Selection" Color="#402EA8FF" />
+      <SolidColorBrush x:Key="Brush.SelectionForeground" Color="{StaticResource Color.Text}" />
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

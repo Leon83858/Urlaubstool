@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Urlaubstool.App.HistoryWindow"
+        Title="Historie / Verwaltung"
+        Width="1000"
+        Height="600"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,15">
+            <TextBlock Text="Urlaubsanträge" FontSize="24" FontWeight="Bold" />
+            
+            <!-- Filters -->
+            <Grid ColumnDefinitions="Auto,150,20,Auto,200,*,Auto">
+                <TextBlock Grid.Column="0" Text="Jahr:" VerticalAlignment="Center" />
+                <NumericUpDown Grid.Column="1" x:Name="YearFilter" 
+                               Minimum="0" Maximum="2030" Value="2026" 
+                               Margin="10,0,0,0" 
+                               Watermark="0 = Alle Jahre" />
+
+                <TextBlock Grid.Column="3" Text="Status:" VerticalAlignment="Center" />
+                <ComboBox Grid.Column="4" x:Name="StatusFilter" 
+                          Margin="10,0,0,0" 
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="Alle" />
+                    <ComboBoxItem Content="Exportiert" />
+                    <ComboBoxItem Content="Genehmigt" />
+                    <ComboBoxItem Content="Abgelehnt" />
+                    <ComboBoxItem Content="Archiviert" />
+                </ComboBox>
+
+                <Button Grid.Column="6" Content="Aktualisieren" 
+                        x:Name="RefreshButton" 
+                        Click="Refresh_Click" />
+            </Grid>
+        </StackPanel>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" Background="White">
+            <DataGrid x:Name="EntriesDataGrid" 
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      BorderBrush="LightGray"
+                      BorderThickness="1"
+                      SelectionMode="Single"
+                      Foreground="Black">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Erstellt" Binding="{Binding CreatedAtString}" Width="140" Foreground="Black" />
+                    <DataGridTextColumn Header="Von" Binding="{Binding StartDateString}" Width="100" Foreground="Black" />
+                    <DataGridTextColumn Header="Bis" Binding="{Binding EndDateString}" Width="100" Foreground="Black" />
+                    <DataGridTextColumn Header="Tage" Binding="{Binding DaysString}" Width="80" Foreground="Black" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding StatusString}" Width="120" Foreground="Black" />
+                    <DataGridTextColumn Header="PDF" Binding="{Binding PdfFileName}" Width="*" Foreground="Black" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Actions -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10" 
+                    Margin="0,15,0,0">
+            <Button Content="PDF öffnen" Width="120" x:Name="OpenPdfButton" Click="OpenPdf_Click" />
+            <Button Content="Genehmigen" Width="120" x:Name="ApproveButton" Click="Approve_Click" 
+                    Background="#4CAF50" Foreground="White" />
+            <Button Content="Ablehnen" Width="120" x:Name="RejectButton" Click="Reject_Click" 
+                    Background="#F44336" Foreground="White" />
+            <Button Content="Archivieren" Width="120" x:Name="ArchiveButton" Click="Archive_Click" />
+            <Button Content="Schließen" Width="120" x:Name="CloseButton" Click="Close_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
