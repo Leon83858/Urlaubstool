@@ -11,7 +11,7 @@ echo "🔨 Kompiliere Urlaubstool v1.2.0..."
 echo "📦 Windows Portable (x64) wird kompiliert..."
 WINDOWS_OUTPUT="$OUTPUT_PATH/Windows"
 mkdir -p "$WINDOWS_OUTPUT"
-dotnet publish Urlaubstool.App/Urlaubstool.App.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o "$WINDOWS_OUTPUT/temp"
+dotnet publish Urlaubstool.App/Urlaubstool.App.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o "$WINDOWS_OUTPUT"
 
 # Copy Icon zu Windows output
 cp appicon.ico "$WINDOWS_OUTPUT/" 2>/dev/null || echo "Icon konnte nicht kopiert werden"
@@ -21,9 +21,8 @@ if [ -d "basis" ]; then
     cp -r basis "$WINDOWS_OUTPUT/"
 fi
 
-# Create final Windows executable location
-mv "$WINDOWS_OUTPUT/temp/Urlaubstool.App.exe" "$WINDOWS_OUTPUT/Urlaubstool.exe" 2>/dev/null || true
-rm -rf "$WINDOWS_OUTPUT/temp"
+# Keep all published files and add a convenience executable name
+cp "$WINDOWS_OUTPUT/Urlaubstool.App.exe" "$WINDOWS_OUTPUT/Urlaubstool.exe" 2>/dev/null || true
 
 echo "✅ Windows Portable erstellt: $WINDOWS_OUTPUT/Urlaubstool.exe"
 

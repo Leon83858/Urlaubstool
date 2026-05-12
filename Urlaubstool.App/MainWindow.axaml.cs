@@ -13,7 +13,7 @@ namespace Urlaubstool.App;
 
 public partial class MainWindow : Window
 {
-    private const string CurrentAppVersion = "1.3.0";
+    private const string CurrentAppVersion = "1.3.0.1";
     private readonly MainWindowViewModel _viewModel;
     private readonly SettingsService _settingsService;
     private Urlaubstool.Infrastructure.Settings.ColorSettings? _colorSettings;
