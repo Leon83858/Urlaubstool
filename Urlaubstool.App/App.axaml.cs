@@ -89,6 +89,12 @@ public partial class App : Application
         {
             Console.WriteLine($"[ERROR] Exception in OnFrameworkInitializationCompleted: {ex}");
             System.Diagnostics.Debug.WriteLine($"[ERROR] Stack trace: {ex.StackTrace}");
+            StartupDiagnostics.WriteFatal("App.OnFrameworkInitializationCompleted", ex);
+
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                desktop.Shutdown(1);
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
