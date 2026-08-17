@@ -115,7 +115,10 @@ public class MainHistoryEntryViewModel : ViewModelBase
     }
 
     public string StartDateString => _entry.StartDate.ToString("dd.MM.yyyy");
+    public DateOnly StartDate => _entry.StartDate;  // For proper DataGrid sorting by date, not string
+    
     public string EndDateString => _entry.EndDate.ToString("dd.MM.yyyy");
+    public DateOnly EndDate => _entry.EndDate;  // For proper DataGrid sorting by date, not string
     public bool StartHalfDay => _entry.StartHalfDay;
     public bool EndHalfDay => _entry.EndHalfDay;
     

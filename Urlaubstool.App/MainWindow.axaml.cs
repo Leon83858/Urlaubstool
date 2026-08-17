@@ -13,7 +13,7 @@ namespace Urlaubstool.App;
 
 public partial class MainWindow : Window
 {
-    private const string CurrentAppVersion = "1.3.0.1";
+    private const string CurrentAppVersion = "1.3.1.0";
     private readonly MainWindowViewModel _viewModel;
     private readonly SettingsService _settingsService;
     private Urlaubstool.Infrastructure.Settings.ColorSettings? _colorSettings;
@@ -30,6 +30,7 @@ public partial class MainWindow : Window
         DataContext = _viewModel;
 
         Loaded += MainWindow_Loaded;
+        Closing += MainWindow_Closing;
         SetupUI();
         
         Console.WriteLine("[DEBUG] MainWindow.ctor() completed");
@@ -39,6 +40,12 @@ public partial class MainWindow : Window
     {
         Console.WriteLine("[DEBUG] MainWindow.OnOpened()");
         base.OnOpened(e);
+    }
+
+    private void MainWindow_Closing(object? sender, WindowClosingEventArgs e)
+    {
+        Console.WriteLine("[DEBUG] MainWindow_Closing()");
+        _viewModel?.Cleanup();
     }
 
     private async void MainWindow_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

@@ -7,7 +7,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Urlaubstool.Domain;
+using Urlaubstool.Infrastructure.Holidays;
+using Urlaubstool.Infrastructure.Logging;
 using Urlaubstool.Infrastructure.Paths;
+using Urlaubstool.Infrastructure.Services;
 using Urlaubstool.Infrastructure.Settings;
 
 namespace Urlaubstool.App;
@@ -425,4 +428,55 @@ public partial class SettingsWindow : Window
         ColorNormaltag.Text = "#0E1A2D";
         UpdateColorPreview(ColorNormaltag, "ColorNormaltagPreview");
     }
+
+    private async void RefreshHolidays_Click(object? sender, RoutedEventArgs e)
+    {
+        var refreshButton = this.FindControl<Button>("RefreshHolidaysButton");
+        var statusTextBlock = this.FindControl<TextBlock>("SyncStatusTextBlock");
+
+        if (refreshButton == null || statusTextBlock == null)
+        {
+            return;
+        }
+
+        try
+        {
+            refreshButton.IsEnabled = false;
+            statusTextBlock.Text = "Wird synchronisiert...";
+
+            var pathService = new PathService();
+            var schoolHolidayProvider = new SchoolHolidayProvider();
+            var publicHolidayProvider = new HybridPublicHolidayProvider();  // Load online data when available
+            var logger = new ConsoleLogger<HolidaysSyncService>();
+
+            var syncService = new HolidaysSyncService(pathService, schoolHolidayProvider, publicHolidayProvider, logger);
+            var success = await syncService.SyncAllAsync();
+
+            if (success)
+            {
+                statusTextBlock.Text = "✓ Synchronisierung erfolgreich";
+                statusTextBlock.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#4CAF50"));
+            }
+            else
+            {
+                statusTextBlock.Text = "✗ Synchronisierung fehlgeschlagen";
+                statusTextBlock.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#F44336"));
+            }
+
+            // Reset status after 3 seconds
+            await Task.Delay(3000);
+            statusTextBlock.Text = "";
+            statusTextBlock.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#666666"));
+        }
+        catch (Exception ex)
+        {
+            statusTextBlock.Text = $"✗ Fehler: {ex.Message}";
+            statusTextBlock.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#F44336"));
+        }
+        finally
+        {
+            refreshButton.IsEnabled = true;
+        }
+    }
 }
+

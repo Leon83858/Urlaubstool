@@ -108,6 +108,13 @@ public sealed class HybridPublicHolidayProvider : IPublicHolidayProvider
         return _local.IsPublicHoliday(date, state);
     }
 
+    public bool IsOptionalPublicHoliday(DateOnly date, string state)
+    {
+        // Hybrid provider delegates optional holidays to local provider
+        // (cache doesn't distinguish optional vs. mandatory)
+        return _local.IsOptionalPublicHoliday(date, state);
+    }
+
     private static bool IsHardBaselineHoliday(DateOnly date)
     {
         return (date.Month, date.Day) switch

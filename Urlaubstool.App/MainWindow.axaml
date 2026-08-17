@@ -215,9 +215,9 @@
                               CanUserReorderColumns="False"
                               CanUserResizeColumns="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Anfangsdatum" Binding="{Binding StartDateString}" Width="Auto" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Anfangsdatum" Binding="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}" Width="Auto" IsReadOnly="True" />
                             <DataGridCheckBoxColumn Header="Halbtag" Binding="{Binding StartHalfDay}" Width="Auto" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Enddatum" Binding="{Binding EndDateString}" Width="Auto" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Enddatum" Binding="{Binding EndDate, StringFormat='{}{0:dd.MM.yyyy}'}" Width="Auto" IsReadOnly="True" />
                             <DataGridCheckBoxColumn Header="Halbtag" Binding="{Binding EndHalfDay}" Width="Auto" IsReadOnly="True" />
                             <DataGridTextColumn Header="Tage" Binding="{Binding DaysString}" Width="Auto" IsReadOnly="True" />
                             <DataGridTextColumn Header="AZA Datum" Binding="{Binding AzaDatesString}" Width="Auto" IsReadOnly="True" />

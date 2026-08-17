@@ -31,6 +31,8 @@ public class MainWindowViewModel : ViewModelBase
     private readonly PdfTemplateFormFillExportService _pdfFormFillService;
     private readonly PathService _pathService;
     private readonly ILogger<MainWindowViewModel> _logger;
+    private HolidaysSyncService? _holidaysSyncService;
+    private bool _isSyncing;
     private AppSettings? _settings;
     private CalculationResult? _lastResult;
     private Guid? _currentRequestId; // Track current request being edited
@@ -93,11 +95,12 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public ICommand RefreshHistoryCommand { get; }
+    public ICommand RefreshHolidaysCommand { get; }
 
     public MainWindowViewModel()
     {
         var pathService = new PathService();
-        var publicHolidayProvider = new PublicHolidayProvider();
+        var publicHolidayProvider = new HybridPublicHolidayProvider();  // Load online data when available
         _schoolHolidayProvider = new SchoolHolidayProvider();
         
         // Set public provider reference
@@ -121,6 +124,11 @@ public class MainWindowViewModel : ViewModelBase
         _historyService = new HistoryService(historyStore, serviceLogger);
         _pathService = pathService;
 
+        // Setup holidays sync service
+        var syncLogger = new ConsoleLogger<HolidaysSyncService>();
+        _holidaysSyncService = new HolidaysSyncService(pathService, _schoolHolidayProvider, publicHolidayProvider, syncLogger);
+        _holidaysSyncService.SyncCompleted += OnHolidaysSyncCompleted;
+
         // StartDate already initialized; Year is derived from StartDate.Year
         _startDate = DateOnly.FromDateTime(DateTime.Today);
         _endDate = DateOnly.FromDateTime(DateTime.Today.AddDays(4));
@@ -130,6 +138,7 @@ public class MainWindowViewModel : ViewModelBase
         HistoryEntries = new ObservableCollection<MainHistoryEntryViewModel>();
         
         RefreshHistoryCommand = new AsyncRelayCommand(async () => await LoadHistoryEntriesAsync());
+        RefreshHolidaysCommand = new AsyncRelayCommand(RefreshHolidaysAsync);
         
         _historyFilterYear = DateTime.Today.Year;
         _historyFilterStatusIndex = 0; // "Alle"
@@ -300,6 +309,24 @@ public class MainWindowViewModel : ViewModelBase
     public IReadOnlyDictionary<DayOfWeek, Domain.VocationalSchoolDayType> VocationalSchoolSettings => 
         _settings?.VocationalSchool ?? new Dictionary<DayOfWeek, Domain.VocationalSchoolDayType>();
 
+    public bool IsSyncing
+    {
+        get => _isSyncing;
+        set => SetProperty(ref _isSyncing, value);
+    }
+
+    /// <summary>
+    /// Cleanup when view model is disposed (on window close).
+    /// </summary>
+    public void Cleanup()
+    {
+        if (_holidaysSyncService != null)
+        {
+            _holidaysSyncService.SyncCompleted -= OnHolidaysSyncCompleted;
+            _holidaysSyncService.StopPeriodicSync();
+        }
+    }
+
     public void AddAzaDay()
     {
         var item = new AzaDayItem(RemoveAzaDay);
@@ -414,6 +441,12 @@ public class MainWindowViewModel : ViewModelBase
             ApprovedDays = 0;
         }
 
+        // Start periodic sync of holidays (24-hour interval)
+        if (_holidaysSyncService != null)
+        {
+            _holidaysSyncService.StartPeriodicSync();
+        }
+
         // Try to update school holidays automatically if student mode is active
         if (_settings.StudentActive && !string.IsNullOrEmpty(_settings.Bundesland))
         {
@@ -454,38 +487,51 @@ public class MainWindowViewModel : ViewModelBase
 
     private async Task UpdateSchoolHolidaysAsync(string bundesland)
     {
+        // Delegate to sync service for consistency
+        if (_holidaysSyncService == null)
+        {
+            return;
+        }
+
         try
         {
             var year = DateTime.Today.Year;
-            var service = new OnlineHolidayService();
-            var cachePath = Path.Combine(_pathService.GetAppDataDirectory(), "school_holidays_cache.json");
+            await _holidaysSyncService.SyncSchoolHolidaysAsync(bundesland, year);
+            await _holidaysSyncService.SyncSchoolHolidaysAsync(bundesland, year + 1);
             
-            // Ensure directory exists
-            var dir = Path.GetDirectoryName(cachePath);
-            if (dir != null && !Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            // Update local cache
-            // We fetch for current year. Ideally we might want next year too.
-            var updated = await service.FetchAndCacheAsync(bundesland, year, cachePath);
-            // Also fetch next year to be safe for cross-year planning
-            var updatedNext = await service.FetchAndCacheAsync(bundesland, year + 1, cachePath);
-            
-            if (updated || updatedNext)
-            {
-                // Reload provider with new cache
-                _schoolHolidayProvider.Reload(cachePath);
-                
-                // Re-calculate to apply new holidays
-                Avalonia.Threading.Dispatcher.UIThread.Post(() => Calculate());
-            }
+            // Re-calculate to apply new holidays
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => Calculate());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to update school holidays");
+            _logger.LogError(ex, "Failed to update school holidays for {Bundesland}", bundesland);
         }
+    }
+
+    private async Task RefreshHolidaysAsync()
+    {
+        if (IsSyncing || _holidaysSyncService == null)
+        {
+            return;
+        }
+
+        IsSyncing = true;
+        try
+        {
+            await _holidaysSyncService.SyncAllAsync();
+            // Re-calculate to apply new holidays
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => Calculate());
+        }
+        finally
+        {
+            IsSyncing = false;
+        }
+    }
+
+    private void OnHolidaysSyncCompleted(object? sender, SyncCompletedEventArgs e)
+    {
+        _logger.LogInformation("Holidays sync completed: {Result}", e);
+        // UI can show a toast notification or update status bar
     }
 
     /// <summary>

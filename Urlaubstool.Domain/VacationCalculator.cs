@@ -92,13 +92,25 @@ public sealed class VacationCalculator
                 dayMessages.Add("Kein Arbeitstag.");
             }
 
-            // Rule 2: public holidays override workdays.
+            // Rule 2: mandatory public holidays override workdays and count as 0.
+            // Optional holidays (like Fronleichnam) count as 1 day instead.
             var stateForHoliday = request.State ?? request.Student.State;
-            if (!string.IsNullOrWhiteSpace(stateForHoliday) && _publicHolidayProvider.IsPublicHoliday(date, stateForHoliday!))
+            if (!string.IsNullOrWhiteSpace(stateForHoliday))
             {
-                isPublicHoliday = true;
-                counted = 0m;
-                dayMessages.Add("Feiertag im ausgewählten Bundesland.");
+                // Check for mandatory holidays first (count as 0)
+                if (_publicHolidayProvider.IsPublicHoliday(date, stateForHoliday!))
+                {
+                    isPublicHoliday = true;
+                    counted = 0m;
+                    dayMessages.Add("Feiertag im ausgewählten Bundesland.");
+                }
+                // Check for optional holidays (count as 1 day if they're optional only)
+                else if (_publicHolidayProvider.IsOptionalPublicHoliday(date, stateForHoliday!))
+                {
+                    isPublicHoliday = true;
+                    counted = 1m;  // Optional holidays count as 1 day
+                    dayMessages.Add("Optionaler Feiertag (zählt als 1 Urlaubstag).");
+                }
             }
 
             // Rule 2.5: AZA-Tage (Arbeitszeitausgleich/Überstundenabbau) count zero.

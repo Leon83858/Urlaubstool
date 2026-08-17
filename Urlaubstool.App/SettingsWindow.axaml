@@ -239,6 +239,25 @@
                        TextWrapping="Wrap"
                        IsVisible="False" />
 
+            <!-- Holiday Data Management -->
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Feiertag- und Schulferiendata" FontWeight="Bold" FontSize="16" />
+                    <TextBlock Classes="muted" Text="Die Anwendung synchronisiert Feiertags- und Schulferiendata automatisch im Hintergrund (täglich). Sie können auch manuell aktualisieren." FontSize="12" TextWrapping="Wrap" />
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button x:Name="RefreshHolidaysButton" 
+                                Content="Jetzt aktualisieren"
+                                Width="150"
+                                Click="RefreshHolidays_Click" />
+                        <TextBlock x:Name="SyncStatusTextBlock"
+                                   VerticalAlignment="Center"
+                                   Foreground="#666666"
+                                   FontSize="12" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
                 <Button Content="Abbrechen" Width="120" x:Name="CancelButton" Click="Cancel_Click" />

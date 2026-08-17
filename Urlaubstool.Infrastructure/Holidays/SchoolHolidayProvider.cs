@@ -38,6 +38,12 @@ public sealed class SchoolHolidayProvider : ISchoolHolidayProvider
             return false;
         }
 
+        // Only apply school holidays to working days (Monday-Friday), not weekends.
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+        {
+            return false;
+        }
+
         // Check same year.
         if (perYear.TryGetValue(date.Year, out var ranges))
         {
