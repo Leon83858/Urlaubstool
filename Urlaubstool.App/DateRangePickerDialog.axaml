@@ -4,24 +4,32 @@
         x:Class="Urlaubstool.App.DateRangePickerDialog"
         Title="Urlaubszeitraum auswählen"
         Width="550"
-        Height="650"
+        MinWidth="440"
+        MinHeight="500"
+        SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False">
 
-    <StackPanel Spacing="16" Margin="20">
-        <!-- Instructions -->
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
         <TextBlock Text="Wählen Sie den Anreisedatum und dann das Abreisedatum" 
                    FontSize="13" Classes="muted" TextWrapping="Wrap" />
 
-        <!-- Calendar -->
-        <controls:DateRangePickerControl x:Name="DateRangePicker" />
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,16,0,0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <controls:DateRangePickerControl x:Name="DateRangePicker" />
+        </ScrollViewer>
 
-        <!-- Buttons -->
-        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,8,0,0">
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    Spacing="10"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0">
             <Button x:Name="CancelButton" Content="Abbrechen" Width="100" Click="Cancel_Click" />
             <Button x:Name="ConfirmButton" Content="Bestätigen" Width="100" Click="Confirm_Click" 
                     Background="#2196F3" Foreground="White" FontWeight="Bold" />
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </Window>
