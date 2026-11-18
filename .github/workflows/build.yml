@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, windows-2022]
+        os: [macos-15, windows-2022]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -32,8 +32,25 @@ jobs:
         shell: bash
         run: |
           cd target/release/bundle
-          find . -type f -print0 | xargs -0 -r shasum -a 256 > SHA256SUMS.txt
-          cat SHA256SUMS.txt
+          node <<'NODE'
+          const { createHash } = require("node:crypto");
+          const { readdirSync, readFileSync, writeFileSync } = require("node:fs");
+          const { join, relative, sep } = require("node:path");
+          function walk(dir) {
+            return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+              const path = join(dir, entry.name);
+              if (entry.isDirectory()) return walk(path);
+              return entry.isFile() && entry.name !== "SHA256SUMS.txt" ? [path] : [];
+            });
+          }
+          const sums = walk(".").sort().map((path) => {
+            const hash = createHash("sha256").update(readFileSync(path)).digest("hex");
+            const name = relative(".", path).split(sep).join("/");
+            return `${hash}  ${name}`;
+          });
+          writeFileSync("SHA256SUMS.txt", `${sums.join("\n")}\n`);
+          console.log(sums.join("\n"));
+          NODE
       - uses: actions/upload-artifact@v4
         with:
           name: urlaubstool-${{ matrix.os }}
