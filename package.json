@@ -1,0 +1,31 @@
+{
+  "name": "urlaubstool-ui",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "check:types": "tsc --noEmit",
+    "tauri": "tauri",
+    "app": "cargo run -p urlaubstool-app",
+    "app:bundle": "bash scripts/bundle-debug.sh",
+    "app:release": "bash scripts/bundle-release.sh",
+    "app:windows": "bash scripts/bundle-windows.sh",
+    "installer": "bash scripts/installer-bauen.sh"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "~2.12.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "~2.12.4",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.6"
+  },
+  "license": "GPL-3.0-only"
+}

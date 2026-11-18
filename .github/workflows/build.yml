@@ -1,0 +1,58 @@
+# Dieser Workflow baut v2 nativ auf Windows und macOS.
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: npm run check:types
+      - name: Anwendung bauen
+        run: npx tauri build ${{ runner.os == 'Windows' && '--bundles nsis' || '--bundles app' }}
+      - name: Prüfsummen bilden
+        shell: bash
+        run: |
+          cd target/release/bundle
+          node <<'NODE'
+          const { createHash } = require("node:crypto");
+          const { readdirSync, readFileSync, writeFileSync } = require("node:fs");
+          const { join, relative, sep } = require("node:path");
+          function walk(dir) {
+            return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+              const path = join(dir, entry.name);
+              if (entry.isDirectory()) return walk(path);
+              return entry.isFile() && entry.name !== "SHA256SUMS.txt" ? [path] : [];
+            });
+          }
+          const sums = walk(".").sort().map((path) => {
+            const hash = createHash("sha256").update(readFileSync(path)).digest("hex");
+            const name = relative(".", path).split(sep).join("/");
+            return `${hash}  ${name}`;
+          });
+          writeFileSync("SHA256SUMS.txt", `${sums.join("\n")}\n`);
+          console.log(sums.join("\n"));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urlaubstool-${{ matrix.os }}
+          path: target/release/bundle/
+          if-no-files-found: error

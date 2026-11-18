@@ -1,0 +1,21 @@
+[package]
+name = "urlaubstool-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+serde = { version = "1", features = ["derive"] }
+sha2.workspace = true
+thiserror.workspace = true
+urlaubstool-application.workspace = true
+urlaubstool-holidays.workspace = true
+urlaubstool-migration.workspace = true
+urlaubstool-storage.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lib]
+path = "src/lib.rs"
