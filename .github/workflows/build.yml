@@ -1,0 +1,41 @@
+# Dieser Workflow baut v2 nativ auf Windows und macOS.
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: npm run check:types
+      - name: Anwendung bauen
+        run: npx tauri build ${{ runner.os == 'Windows' && '--bundles nsis' || '--bundles app' }}
+      - name: Prüfsummen bilden
+        shell: bash
+        run: |
+          cd target/release/bundle
+          find . -type f -print0 | xargs -0 -r shasum -a 256 > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urlaubstool-${{ matrix.os }}
+          path: target/release/bundle/
+          if-no-files-found: error

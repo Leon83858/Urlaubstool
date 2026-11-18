@@ -1,0 +1,19 @@
+[package]
+name = "urlaubstool-application"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+lopdf = "0.42"
+serde = { version = "1", features = ["derive"] }
+thiserror.workspace = true
+urlaubstool-domain.workspace = true
+urlaubstool-holidays.workspace = true
+
+[dev-dependencies]
+pdf-extract = "0.12.1"
+
+[lib]
+path = "src/lib.rs"

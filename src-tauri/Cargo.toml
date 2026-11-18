@@ -1,0 +1,18 @@
+[package]
+name = "urlaubstool-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[build-dependencies]
+tauri-build.workspace = true
+
+[dependencies]
+chrono.workspace = true
+serde = { version = "1", features = ["derive"] }
+serde_json.workspace = true
+rfd = "0.15"
+tauri.workspace = true
+urlaubstool-api.workspace = true
+urlaubstool-application.workspace = true
+urlaubstool-storage.workspace = true

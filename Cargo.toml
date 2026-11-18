@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/domain",
+    "crates/application",
+    "crates/api",
+    "crates/holidays",
+    "crates/migration",
+    "crates/storage",
+    "src-tauri",
+]
+default-members = [
+    "crates/domain",
+    "crates/application",
+    "crates/api",
+    "crates/holidays",
+    "crates/migration",
+    "crates/storage",
+]
+
+[workspace.package]
+version = "2.0.0"
+license = "GPL-3.0-only"
+edition = "2021"
+rust-version = "1.90"
+
+[workspace.dependencies]
+chrono = { version = "0.4.42", default-features = false, features = ["std"] }
+ical = { version = "0.11.0", default-features = false, features = ["ical"] }
+rusqlite = { version = "0.41.1", default-features = false, features = ["backup", "bundled"] }
+csv = "1.4.0"
+sha2 = "0.10.9"
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+tauri = "~2.12.4"
+tauri-build = "~2.7.3"
+urlaubstool-domain = { path = "crates/domain" }
+urlaubstool-application = { path = "crates/application" }
+urlaubstool-api = { path = "crates/api" }
+urlaubstool-holidays = { path = "crates/holidays" }
+urlaubstool-storage = { path = "crates/storage" }
+urlaubstool-migration = { path = "crates/migration" }
